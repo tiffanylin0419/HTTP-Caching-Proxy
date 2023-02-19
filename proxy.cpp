@@ -6,10 +6,12 @@
 #include "function.h"
 #include "request.h"
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
+#define RESPONSE_LEN 20
+#define BUFFER_LEN 50000
 
 void httpConnect(int client_fd, int server_fd){
-  const char* response = "HTTP/1.1 200 OK\r\n";
-  send(client_fd, response, strlen(response), 0);
+  const char* response="HTTP/1.1 200 OK\r\n\r\n";
+  send(client_fd, response,RESPONSE_LEN, 0);
   fd_set readfds;
   int nfds = server_fd > client_fd ? server_fd + 1 : client_fd + 1;
 
@@ -20,20 +22,16 @@ void httpConnect(int client_fd, int server_fd){
     if(select(nfds, &readfds, NULL, NULL, NULL)<=0){
       continue;
     }
-
     int fd[2] = {server_fd, client_fd};
+
     for (int i = 0; i < 2; i++) {
-      char message[50000] = {0};//add
+      char buffer[BUFFER_LEN] = {0};//add
       if (FD_ISSET(fd[i], &readfds)) {
-        ssize_t bytes_received = recv(fd[i], message, sizeof(message), 0);
+        ssize_t bytes_received = recv(fd[i], buffer, sizeof(buffer), 0);
         if (bytes_received <= 0) {
           return;
         }
-        else {
-          if (send(fd[1 - i], message,bytes_received, 0) <= 0) {
-            return;
-          }
-        }
+        send(fd[1 - i], buffer,bytes_received, 0) ;
       }
     }
   }
@@ -68,28 +66,28 @@ void proxy::run() {
 void * proxy::handle(void * info) {
   Client_Info * client_info = (Client_Info *)info;
   int client_fd = client_info->getFd();
-  char req_msg[70000] = {0};
-  if (recv(client_fd, req_msg, sizeof(req_msg), 0)<0){
+  char buffer[BUFFER_LEN] = {0};
+  if (recv(client_fd, buffer, sizeof(buffer), 0)<0){
     return NULL;
   }
-  std::string req_msg_s(req_msg);
-  std::cout<<req_msg<<std::endl;
-  if (req_msg_s == ""||req_msg_s == "\r" || req_msg_s == "\n" || req_msg_s == "\r\n"){
+  std::string buffer_s(buffer);
+  std::cout<<buffer<<std::endl;
+  if (buffer_s == ""||buffer_s == "\r" || buffer_s == "\n" || buffer_s == "\r\n"){
     return NULL;
   }
   //parse http request
-  Request request=Request(req_msg_s);
+  Request request=Request(buffer_s);
   int server_fd = build_client(request.host.c_str(), request.port.c_str());
 
-  
   //connect
   if (request.method=="CONNECT"){
     httpConnect(client_fd, server_fd);
   }
-  //?change to else
+  //else
   else if (request.method != "POST" && request.method != "GET" && request.method != "CONNECT") {
     return NULL;
   }
+
 
   close(server_fd);
   close(client_fd);
@@ -102,8 +100,8 @@ void * proxy::handle(void * info) {
   /*int server_fd_init = build_client("youtube.com", "443");
   char mes_buf[8192] = {0};
 
-  if (send(server_fd_init, req_msg, sizeof(req_msg), MSG_NOSIGNAL) == 0) {
-    std::cout << "Message send to server is 0\n";
+  if (send(server_fd_init, buffer, sizeof(buffer), MSG_NOSIGNAL) == 0) {
+    std::cout << "buffer send to server is 0\n";
   }
   if (recv(server_fd_init, mes_buf, sizeof(mes_buf), 0) == 0) {
     std::cout << "before while loop closed\n";
