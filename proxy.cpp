@@ -3,6 +3,9 @@
 #include <pthread.h>
 
 #include "client_info.h"
+
+#include "proxy_function.h"
+
 #include "function.h"
 #include "request.h"
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
@@ -38,6 +41,108 @@ void httpConnect(int client_fd, int server_fd){
 }
 
 
+//?copy
+std::string sendContentLen(int send_fd,char * server_msg,int mes_len,int content_len) {
+  int total_len = 0;
+  int len = 0;
+  std::string msg(server_msg, mes_len);
+
+  while (total_len < content_len) {
+    char new_server_msg[65536] = {0};
+    if ((len = recv(send_fd, new_server_msg, sizeof(new_server_msg), 0)) <= 0) {
+      break;
+    }
+    std::string temp(new_server_msg, len);
+    msg += temp;
+    total_len += len;
+  }
+  return msg;
+}
+
+//?copy
+void httpPost(int client_fd,int server_fd,char * req_msg,int len,int id,const char * host) {
+  int context_len = getContextLength(req_msg, len);  //get length of client request
+  if (context_len != -1) {
+    std::string request = sendContentLen(client_fd, req_msg, len, context_len);
+    char send_request[request.length() + 1];
+    strcpy(send_request, request.c_str());
+    send(server_fd,
+         send_request,
+         sizeof(send_request),
+         MSG_NOSIGNAL);  // send all the request info from client to server
+    char response[BUFFER_LEN] = {0};
+    int response_len = recv(server_fd,
+                            response,
+                            sizeof(response),
+                            MSG_WAITALL);  //first time received response from server
+    /*if (response_len != 0) {
+      Response res;
+      res.ParseLine(req_msg, len);
+      pthread_mutex_lock(&mutex);
+      logFile << id << ": Received \"" << res.getLine() << "\" from " << host
+              << std::endl;
+      pthread_mutex_unlock(&mutex);
+
+      std::cout << "receive response from server which is:" << response << std::endl;
+
+      send(client_fd, response, response_len, MSG_NOSIGNAL);
+
+      pthread_mutex_lock(&mutex);
+      logFile << id << ": Responding \"" << res.getLine() << std::endl;
+      pthread_mutex_unlock(&mutex);
+    }
+    else {
+      std::cout << "server socket closed!\n";
+    }*/
+  }
+}
+
+void * handle(void * info) {
+  Client_Info * client_info = (Client_Info *)info;
+  int client_fd = client_info->getFd();
+  char buffer[BUFFER_LEN] = {0};
+  ssize_t bytes_received=recv(client_fd, buffer, sizeof(buffer), 0);
+  if (bytes_received<0){
+    return NULL;
+  }
+  std::string buffer_s(buffer);
+  std::cout<<buffer<<std::endl;//?
+  if (buffer_s == ""||buffer_s == "\r" || buffer_s == "\n" || buffer_s == "\r\n"){
+    return NULL;
+  }
+  //parse http request
+  Request request=Request(buffer_s);
+  const char * host = request.host.c_str();
+  const char * port = request.port.c_str();
+  int server_fd = build_client(host,port);
+
+  //connect
+  if (request.method=="CONNECT"){
+    httpConnect(client_fd, server_fd);
+  }
+  //post
+  else if (request.method=="POST"){
+    //todo
+    httpPost(client_fd, server_fd, buffer, bytes_received, client_info->getID(), host);
+  }
+  //get
+  else if (request.method=="GET"){
+    //todo
+    std::cout<<"get"<<std::endl;
+  }
+  //none
+  else {
+    return NULL;
+  }
+
+
+  close(server_fd);
+  close(client_fd);
+
+  return NULL;
+}
+
+
 void proxy::run() {
   int temp_fd = build_server(this->port_num);
   if (temp_fd == -1) {
@@ -63,37 +168,7 @@ void proxy::run() {
   }
 }
 
-void * proxy::handle(void * info) {
-  Client_Info * client_info = (Client_Info *)info;
-  int client_fd = client_info->getFd();
-  char buffer[BUFFER_LEN] = {0};
-  if (recv(client_fd, buffer, sizeof(buffer), 0)<0){
-    return NULL;
-  }
-  std::string buffer_s(buffer);
-  std::cout<<buffer<<std::endl;
-  if (buffer_s == ""||buffer_s == "\r" || buffer_s == "\n" || buffer_s == "\r\n"){
-    return NULL;
-  }
-  //parse http request
-  Request request=Request(buffer_s);
-  int server_fd = build_client(request.host.c_str(), request.port.c_str());
 
-  //connect
-  if (request.method=="CONNECT"){
-    httpConnect(client_fd, server_fd);
-  }
-  //else
-  else if (request.method != "POST" && request.method != "GET" && request.method != "CONNECT") {
-    return NULL;
-  }
-
-
-  close(server_fd);
-  close(client_fd);
-
-  return NULL;
-}
 
 
 

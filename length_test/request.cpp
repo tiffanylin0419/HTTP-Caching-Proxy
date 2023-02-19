@@ -1,7 +1,7 @@
 #include "request.h"
 
 
-int is_number(std::string& s) {
+bool is_number(std::string& s) {
   for (std::string::iterator it = s.begin(); it != s.end(); ++it) {
     char c = *it;
     if (!isdigit(c)) {
