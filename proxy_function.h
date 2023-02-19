@@ -19,7 +19,6 @@ int getContextLength(const char * server_msg, int mes_len) {
   for(int i=0;i<parsedSpace.size();i++){
     if(parsedSpace[i]=="Content-Length:"){
       std::string hostLine=parsedSpace[i+1];
-      std::cout<<hostLine<<std::endl;
       return get_number(hostLine);
     }
   }
