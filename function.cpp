@@ -27,6 +27,8 @@ int build_server(const char * port) {
   if (status != 0) {
     cerr << "Error: cannot get address info for host" << endl;
     cerr << "  (" << hostname << "," << port << ")" << endl;
+    //exit(EXIT_FAILURE);
+    return -1;
   }
 
   if (strcmp(port, "") == 0) {
@@ -40,7 +42,8 @@ int build_server(const char * port) {
   if (socket_fd == -1) {
     cerr << "Error: cannot create socket" << endl;
     cerr << "  (" << hostname << "," << port << ")" << endl;
-    exit(EXIT_FAILURE);
+    //exit(EXIT_FAILURE);
+    return -1;
   }
 
   int yes = 1;
@@ -49,14 +52,16 @@ int build_server(const char * port) {
   if (status == -1) {
     cerr << "Error: cannot bind socket" << endl;
     cerr << "  (" << hostname << "," << port << ")" << endl;
-    exit(EXIT_FAILURE);
+    //exit(EXIT_FAILURE);
+    return -1;
   }
 
   status = listen(socket_fd, 100);
   if (status == -1) {
     cerr << "Error: cannot listen on socket" << endl;
     cerr << "  (" << hostname << "," << port << ")" << endl;
-    exit(EXIT_FAILURE);
+    //exit(EXIT_FAILURE);
+    return -1;
   }
 
   //cout << "Waiting for connection on port " << port << endl;
@@ -78,7 +83,8 @@ int build_client(const char * hostname, const char * port) {
   if (status != 0) {
     cerr << "Error: cannot get address info for host" << endl;
     cerr << "  (" << hostname << "," << port << ")" << endl;
-    exit(EXIT_FAILURE);
+    //exit(EXIT_FAILURE);
+    return -1;
   }
 
   socket_fd = socket(host_info_list->ai_family,
@@ -87,7 +93,8 @@ int build_client(const char * hostname, const char * port) {
   if (socket_fd == -1) {
     cerr << "Error: cannot create socket" << endl;
     cerr << "  (" << hostname << "," << port << ")" << endl;
-    exit(EXIT_FAILURE);
+    //exit(EXIT_FAILURE);
+    return -1;
   }
 
   //cout << "Connecting to " << hostname << " on port " << port << "..." << endl;
@@ -96,7 +103,8 @@ int build_client(const char * hostname, const char * port) {
   if (status == -1) {
     cerr << "Error: cannot connect to socket" << endl;
     cerr << "  (" << hostname << "," << port << ")" << endl;
-    exit(EXIT_FAILURE);
+    //exit(EXIT_FAILURE);
+    return -1;
   }
   std::cout << "Connect to server successfully\n";
   freeaddrinfo(host_info_list);
@@ -112,7 +120,9 @@ int server_accept(int socket_fd) {
       accept(socket_fd, (struct sockaddr *)&socket_addr, &socket_addr_len);
   if (client_connect_fd == -1) {
     cerr << "Error: cannot accept connection on socket" << endl;
-    exit(EXIT_FAILURE);
+    perror("accept() failed");
+    //exit(EXIT_FAILURE);
+    return -1;
   }
   return client_connect_fd;
 }
@@ -122,7 +132,8 @@ int get_port_num(int socket_fd) {
   socklen_t len = sizeof(sin);
   if (getsockname(socket_fd, (struct sockaddr *)&sin, &len) == -1) {
     cerr << "Error: cannot getsockname" << endl;
-    exit(EXIT_FAILURE);
+    //exit(EXIT_FAILURE);
+    return -1;
   }
   return ntohs(sin.sin_port);
 }
