@@ -22,19 +22,13 @@ void * proxy::handle(void * info) {
   int client_fd = client_info->getFd();
   char req_msg[8192] = {0};
   recv(client_fd, req_msg, sizeof(req_msg), 0);
+  //need parsing
 
-  /*int server_fd_init = build_client("youtube.com", "443");
-  char mes_buf[8192] = {0};
+  //cout<<req_msg;
 
-  if (send(server_fd_init, req_msg, sizeof(req_msg), MSG_NOSIGNAL) == 0) {
-    std::cout << "Message send to server is 0\n";
-  }
-  if (recv(server_fd_init, mes_buf, sizeof(mes_buf), 0) == 0) {
-    std::cout << "before while loop closed\n";
-  }*/
+  const char * hostname="google.com";
   send(client_fd, "HTTP/1.1 200 OK\r\n\r\n", 19, 0);
-
-  int server_fd = build_client("google.com", "443");
+  int server_fd = build_client(hostname, "443");
   fd_set readfds;
   int nfds = server_fd > client_fd ? server_fd + 1 : client_fd + 1;
 
@@ -63,3 +57,14 @@ void * proxy::handle(void * info) {
   }
   return NULL;
 }
+
+
+  /*int server_fd_init = build_client("youtube.com", "443");
+  char mes_buf[8192] = {0};
+
+  if (send(server_fd_init, req_msg, sizeof(req_msg), MSG_NOSIGNAL) == 0) {
+    std::cout << "Message send to server is 0\n";
+  }
+  if (recv(server_fd_init, mes_buf, sizeof(mes_buf), 0) == 0) {
+    std::cout << "before while loop closed\n";
+  }*/
