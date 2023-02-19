@@ -1,17 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-
-#include <cstdio>
-#include <cstdlib>
-#include <iostream>
-#include <sstream>
-#include <string>
-//using namespace std;
-
-#include <vector>
-#include <iostream>
-#include <cstring>
-#include <exception>
+#include "head.h"
 
 class Request {
  public:

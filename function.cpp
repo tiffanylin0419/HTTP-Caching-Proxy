@@ -27,7 +27,6 @@ int build_server(const char * port) {
   if (status != 0) {
     cerr << "Error: cannot get address info for host" << endl;
     cerr << "  (" << hostname << "," << port << ")" << endl;
-    exit(EXIT_FAILURE);
   }
 
   if (strcmp(port, "") == 0) {
