@@ -16,10 +16,13 @@ int main() {
 "Expires: Thu, 24 Feb 2023 16:30:00 GMT\n"
 "Last-Modified: Wed, 23 Feb 2023 12:00:00 GMT\n"
 "ETag: \"example-12345\"\n"
-"Cache-Control: max-age=3601\n";
+"Cache-Control: must-revalidate,max-age=3601,max-age=3601\n";
 
   GetRequest req=GetRequest(str);
   req.print();
+  if (req.max_age_time.getInput()==""){
+    std::cout<<"no max-age\n\n";
+  }
   
   return 0;
 }

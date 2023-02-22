@@ -21,11 +21,14 @@ int getMonth(std::string s){
 }
 
 int get_number(std::string s) {
-  int ans=0;
+  int ans=-1;
   for (std::string::iterator it = s.begin(); it != s.end(); ++it) {
     char c = *it;
     if (!isdigit(c)) {
-      return -1;
+      return ans;
+    }
+    if(ans==-1){
+      ans=0;
     }
     ans=ans*10+static_cast<int>(c)-static_cast<int>('0');
   }
@@ -68,6 +71,7 @@ class Date {
 
   //get
   std::tm getTime(){return time;}
+  std::string getInput(){return input;}
 
   //print
   void print(){
