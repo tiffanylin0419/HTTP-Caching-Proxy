@@ -43,6 +43,7 @@ class Date {
   //if input="some string", created by the string
   std::string input;
   std::tm time;
+  
 
   void Parse(){//"Wed, 23 Feb 2023 12:00:00 GMT"
     time.tm_wday=getWeekDay(input.substr(0,3));
@@ -121,5 +122,9 @@ class Date {
     std::time_t time_as_time_t = std::mktime(&t2);
     time_as_time_t += max_age;
     time = *localtime(&time_as_time_t);
+  }
+
+  bool isEmpty(){
+    return input=="";
   }
 };

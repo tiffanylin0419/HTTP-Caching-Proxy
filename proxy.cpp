@@ -8,7 +8,8 @@
 
 #include "function.h"
 #include "request.h"
-#include "GetRequest.h"
+#include "response.h"
+
 
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 #define RESPONSE_LEN 20
@@ -164,20 +165,3 @@ void proxy::run() {
   }
   close(temp_fd);
 }
-
-
-
-
-
-  /*int server_fd_init = build_client("youtube.com", "443");
-  char mes_buf[8192] = {0};
-
-  if (send(server_fd_init, buffer, sizeof(buffer), MSG_NOSIGNAL) == 0) {
-    std::cout << "buffer send to server is 0\n";
-  }
-  if (recv(server_fd_init, mes_buf, sizeof(mes_buf), 0) == 0) {
-    std::cout << "before while loop closed\n";
-  }*/
-
-
-

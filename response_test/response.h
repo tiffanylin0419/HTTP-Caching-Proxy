@@ -2,11 +2,13 @@
 #include "head.h"
 
 
-class GetRequest {
+class response{
   public:
     std::string input;
     std::string line;
+    std::string statusCode;
     std::string etag;
+    
 
     Date date_time;// for max-age & validation
     Date last_modified_time;
@@ -19,7 +21,7 @@ class GetRequest {
 
 
     //constructor
-    GetRequest(std::string input) : input(input),line(""),etag(""),
+    response(std::string input) : input(input),line(""),statusCode(""),etag(""),
         canCache(false),needRevalidate(false),needCheckTime(false){
         Parse();
     }
@@ -50,9 +52,10 @@ class GetRequest {
 
         }
         
-        //etag, cache-control
+        //etag, cache-control, status code
         std::stringstream ss(input);
         std::vector<std::string> parsedSpace((std::istream_iterator<std::string>(ss)), std::istream_iterator<std::string>());
+        statusCode=parsedSpace[1];
         std::string cache_control;
         for(int i=0;i<parsedSpace.size();i++){
             if(parsedSpace[i]=="ETag:"){
@@ -84,15 +87,24 @@ class GetRequest {
 
     void print(){
         std::cout<<"line: "<<line<<"\n";
+        std::cout<<"status code: "<<statusCode<<"\n";
         std::cout<<"etag: "<<etag<<"\n";
-        std::cout<<"date_time: ";
-        date_time.print();
-        std::cout<<"last_modified_time: ";
-        last_modified_time.print();
-        std::cout<<"expire_time: ";
-        expire_time.print();
-        std::cout<<"max_age_time: ";
-        max_age_time.print();
+        if(!date_time.isEmpty()){
+            std::cout<<"date_time: ";
+            date_time.print();
+        }
+        if(!last_modified_time.isEmpty()){
+            std::cout<<"last_modified_time: ";
+            last_modified_time.print();
+        }
+        if(!expire_time.isEmpty()){
+            std::cout<<"expire_time: ";
+            expire_time.print();
+        }
+        if(!max_age_time.isEmpty()){
+            std::cout<<"max_age_time: ";
+            max_age_time.print();
+        }
         std::cout<<"canCache: "<<canCache<<"\n";
         std::cout<<"needRevalidate: "<<needRevalidate<<"\n";
         std::cout<<"needCheckTime: "<<needCheckTime<<"\n";
