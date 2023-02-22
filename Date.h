@@ -1,5 +1,6 @@
 #include "head.h"
 
+
 int getWeekDay(std::string s){
   std::string day[] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
   for(int i=0;i<7;i++){
@@ -37,6 +38,9 @@ int get_number(std::string s) {
 
 class Date {
   private:
+  //if input="", no Date
+  // if input=" ", created by tm, or renewed
+  //if input="some string", created by the string
   std::string input;
   std::tm time;
 
@@ -53,21 +57,12 @@ class Date {
 
  public:
  //constructor
-  Date(){}
+  Date() : input(""){}
+  Date(std::tm time) : input(" "),time(time){};
   Date(std::string input) : input(input){
     Parse();
   };
-
-  Date(int wday,int mday, int mon, int year, int hour, int min, int sec) : input(""){
-    time.tm_wday=wday;//0-6
-    time.tm_mday=mday,//1-31
-    time.tm_mon=mon;//0-11
-    time.tm_year=year-1900;//year
-    time.tm_hour=hour;//0-23
-    time.tm_min=min;//0-59
-    time.tm_sec=sec;//0-61
-    time.tm_isdst = -1;
-  };
+  
 
   //get
   std::tm getTime(){return time;}
@@ -78,6 +73,38 @@ class Date {
     std::cout << asctime(&time);
   }
 
+  //to HTTP form string , ex. Tue, 15 Nov 2022 08:12:31 GMT
+  std::string toString(){
+    std::stringstream timeStream;
+    switch (time.tm_wday) {
+      case 0: timeStream << "Sun"; break;
+      case 1: timeStream << "Mon"; break;
+      case 2: timeStream << "Tue"; break;
+      case 3: timeStream << "Wed"; break;
+      case 4: timeStream << "Thu"; break;
+      case 5: timeStream << "Fri"; break;
+      case 6: timeStream << "Sat"; break;
+    }
+    timeStream <<", "<< time.tm_mday << " ";
+    switch (time.tm_mon+1) {
+      case 1: timeStream << "Jan"; break;
+      case 2: timeStream << "Feb"; break;
+      case 3: timeStream << "Mar"; break;
+      case 4: timeStream << "Apr"; break;
+      case 5: timeStream << "May"; break;
+      case 6: timeStream << "Jun"; break;
+      case 7: timeStream << "Jul"; break;
+      case 8: timeStream << "Aug"; break;
+      case 9: timeStream << "Sep"; break;
+      case 10: timeStream << "Oct"; break;
+      case 11: timeStream << "Nov"; break;
+      case 12: timeStream << "Dec"; break;
+    }
+    timeStream << " " << time.tm_year+1900 << " "<< std::setw(2) << std::setfill('0') << time.tm_hour << ":" << std::setw(2) << std::setfill('0') << time.tm_min << ":" << std::setw(2) << std::setfill('0') << time.tm_sec << " GMT";
+    return timeStream.str();
+  }
+
+
   //compare time
   bool isLessThan(Date d2){
     std::tm t1=time;
@@ -86,7 +113,10 @@ class Date {
     std::time_t time2 = std::mktime(&t2);
     return time1 < time2;
   }
+
+  //renew used on max_age-date
   void renew(Date d2,int max_age){
+    input=" ";
     std::tm t2=d2.getTime();
     std::time_t time_as_time_t = std::mktime(&t2);
     time_as_time_t += max_age;

@@ -1,5 +1,6 @@
 #include "head.h"
 
+
 int getWeekDay(std::string s){
   std::string day[] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
   for(int i=0;i<7;i++){
@@ -72,6 +73,38 @@ class Date {
     std::cout << asctime(&time);
   }
 
+  //to HTTP form string , ex. Tue, 15 Nov 2022 08:12:31 GMT
+  std::string toString(){
+    std::stringstream timeStream;
+    switch (time.tm_wday) {
+      case 0: timeStream << "Sun"; break;
+      case 1: timeStream << "Mon"; break;
+      case 2: timeStream << "Tue"; break;
+      case 3: timeStream << "Wed"; break;
+      case 4: timeStream << "Thu"; break;
+      case 5: timeStream << "Fri"; break;
+      case 6: timeStream << "Sat"; break;
+    }
+    timeStream <<", "<< time.tm_mday << " ";
+    switch (time.tm_mon+1) {
+      case 1: timeStream << "Jan"; break;
+      case 2: timeStream << "Feb"; break;
+      case 3: timeStream << "Mar"; break;
+      case 4: timeStream << "Apr"; break;
+      case 5: timeStream << "May"; break;
+      case 6: timeStream << "Jun"; break;
+      case 7: timeStream << "Jul"; break;
+      case 8: timeStream << "Aug"; break;
+      case 9: timeStream << "Sep"; break;
+      case 10: timeStream << "Oct"; break;
+      case 11: timeStream << "Nov"; break;
+      case 12: timeStream << "Dec"; break;
+    }
+    timeStream << " " << time.tm_year+1900 << " "<< std::setw(2) << std::setfill('0') << time.tm_hour << ":" << std::setw(2) << std::setfill('0') << time.tm_min << ":" << std::setw(2) << std::setfill('0') << time.tm_sec << " GMT";
+    return timeStream.str();
+  }
+
+
   //compare time
   bool isLessThan(Date d2){
     std::tm t1=time;
@@ -80,6 +113,8 @@ class Date {
     std::time_t time2 = std::mktime(&t2);
     return time1 < time2;
   }
+
+  //renew used on max_age-date
   void renew(Date d2,int max_age){
     input=" ";
     std::tm t2=d2.getTime();

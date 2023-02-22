@@ -18,7 +18,7 @@ void httpConnect(int client_fd, int server_fd){
   const char* response="HTTP/1.1 200 OK\r\n\r\n";
   send(client_fd, response,RESPONSE_LEN, 0);
   fd_set readfds;
-  int nfds = server_fd > client_fd ? server_fd + 1 : client_fd + 1;//?
+  int nfds = server_fd > client_fd ? server_fd + 1 : client_fd + 1;//todo: change this line
 
   while (1) {
 
@@ -29,7 +29,6 @@ void httpConnect(int client_fd, int server_fd){
       continue;
     }
     //send between server and client
-    
     if (FD_ISSET(server_fd, &readfds)) {
       char buffer1[BUFFER_LEN] = {0};//add
       ssize_t bytes_received = recv(server_fd, buffer1, sizeof(buffer1), 0);
@@ -38,7 +37,6 @@ void httpConnect(int client_fd, int server_fd){
       }
       buffer1[bytes_received]='\0';
       send(client_fd, buffer1,bytes_received, 0) ;
-      //add
     }
     
     if (FD_ISSET(client_fd, &readfds)) {

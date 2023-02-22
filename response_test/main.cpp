@@ -23,8 +23,8 @@ int main() {
   if (req.max_age_time.getInput()==""){
     std::cout<<"no max-age\n\n";
   }
-  std::cout<<"d"<<req.max_age_time.getInput()<<"d";
-  
+  std::cout<<"d"<<req.max_age_time.getInput()<<"d\n";
+  std::cout<<req.expire_time.toString();
   return 0;
 }
 
