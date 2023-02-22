@@ -45,6 +45,7 @@ class GetRequest {
             }
             else if (front=="Expires:"){
                 expire_time=Date(back);
+                needRevalidate=true;needCheckTime=true;
             }
 
         }

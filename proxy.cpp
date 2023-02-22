@@ -8,10 +8,11 @@
 
 #include "function.h"
 #include "request.h"
+#include "GetRequest.h"
+
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 #define RESPONSE_LEN 20
 #define BUFFER_LEN 50000
-
 
 //todo: check recv,send return value
 void httpConnect(int client_fd, int server_fd){
