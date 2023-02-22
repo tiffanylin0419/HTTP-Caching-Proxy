@@ -13,7 +13,7 @@ pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 #define BUFFER_LEN 50000
 
 
-
+//todo: check recv,send return value
 void httpConnect(int client_fd, int server_fd){
   const char* response="HTTP/1.1 200 OK\r\n\r\n";
   send(client_fd, response,RESPONSE_LEN, 0);
@@ -53,6 +53,24 @@ void httpConnect(int client_fd, int server_fd){
   }
 }
 
+void httpPost(int client_fd, int server_fd,char* buffer1 ,ssize_t bytes_received){
+  ssize_t server_send = send(server_fd, buffer1, bytes_received, MSG_NOSIGNAL); 
+    if (server_send<0){
+      std::cerr << "Error: cannot send to server" << std::endl;
+      return;
+    }
+    char buffer2[BUFFER_LEN] = {0};
+    bytes_received  = recv(server_fd, buffer2, sizeof(buffer2), 0);
+    if (bytes_received <0){
+      std::cerr << "Error: cannot received from server" << std::endl;
+      return;
+    }
+    ssize_t send_client = send(client_fd, buffer2, bytes_received , MSG_NOSIGNAL); 
+    if (send_client<0){
+      std::cerr << "Error: cannot received from server" << std::endl;
+      return;
+    }
+}
 
 void * handle(void * info) {
   Client_Info * client_info = (Client_Info *)info;
@@ -75,19 +93,35 @@ void * handle(void * info) {
 
   //connect
   if (request.method=="CONNECT"){
-    std::cout<<"connect";
+    std::cout<<"connect"<<std::endl;
     httpConnect(client_fd, server_fd);
   }
   //post
   else if (request.method=="POST"){
-    std::cout<<"post";
+    std::cout<<"post"<<std::endl;
     //todo
-    //httpPost(client_fd, server_fd, buffer, bytes_received, client_info->getID(), host);
+    httpPost(client_fd, server_fd,buffer,bytes_received);
   }
   //get
   else if (request.method=="GET"){
     //todo
     std::cout<<"get"<<std::endl;
+    ssize_t server_send = send(server_fd, buffer, sizeof(buffer), MSG_NOSIGNAL); 
+    if (server_send<0){
+      std::cerr << "Error: cannot send to server" << std::endl;
+      return NULL;
+    }
+    char buffer_from_sever[BUFFER_LEN] = {0};
+    ssize_t bytes_received  = recv(server_fd, buffer_from_sever, sizeof(buffer_from_sever), 0);
+    if (bytes_received <0){
+      std::cerr << "Error: cannot received from server" << std::endl;
+      return NULL;
+    }
+    ssize_t send_client = send(client_fd, buffer_from_sever, bytes_received , MSG_NOSIGNAL); 
+    if (send_client<0){
+      std::cerr << "Error: cannot received from server" << std::endl;
+      return NULL;
+    }
   }
   //none
   else {
