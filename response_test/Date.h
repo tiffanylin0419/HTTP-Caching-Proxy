@@ -37,6 +37,9 @@ int get_number(std::string s) {
 
 class Date {
   private:
+  //if input="", no Date
+  // if input=" ", created by tm, or renewed
+  //if input="some string", created by the string
   std::string input;
   std::tm time;
 
@@ -53,21 +56,12 @@ class Date {
 
  public:
  //constructor
-  Date(){}
+  Date() : input(""){}
+  Date(std::tm time) : input(" "),time(time){};
   Date(std::string input) : input(input){
     Parse();
   };
-
-  Date(int wday,int mday, int mon, int year, int hour, int min, int sec) : input(""){
-    time.tm_wday=wday;//0-6
-    time.tm_mday=mday,//1-31
-    time.tm_mon=mon;//0-11
-    time.tm_year=year-1900;//year
-    time.tm_hour=hour;//0-23
-    time.tm_min=min;//0-59
-    time.tm_sec=sec;//0-61
-    time.tm_isdst = -1;
-  };
+  
 
   //get
   std::tm getTime(){return time;}
@@ -87,6 +81,7 @@ class Date {
     return time1 < time2;
   }
   void renew(Date d2,int max_age){
+    input=" ";
     std::tm t2=d2.getTime();
     std::time_t time_as_time_t = std::mktime(&t2);
     time_as_time_t += max_age;
