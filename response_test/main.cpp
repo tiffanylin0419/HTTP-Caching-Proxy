@@ -16,7 +16,7 @@ int main() {
                   "\n"
                   "This is the content of the response body.\n";
 
-  response req=response(str);
+  Response req=Response(str);
   req.print();
   if (req.max_age_time.getInput()==""){
     std::cout<<"no max-age\n\n";

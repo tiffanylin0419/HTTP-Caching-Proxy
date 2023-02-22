@@ -15,6 +15,8 @@ pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 #define RESPONSE_LEN 20
 #define BUFFER_LEN 50000
 
+std::map<std::string, Response> cache;
+
 //todo: check recv,send return value
 void httpConnect(int client_fd, int server_fd){
   const char* response="HTTP/1.1 200 OK\r\n\r\n";
@@ -112,7 +114,7 @@ void * handle(void * info) {
   //get
   else if (request.method=="GET"){
     //todo
-    std::cout<<"get"<<std::endl;
+    /*std::cout<<"get"<<std::endl;
     ssize_t server_send = send(server_fd, buffer, sizeof(buffer), MSG_NOSIGNAL); 
     if (server_send<0){
       std::cerr << "Error: cannot send to server" << std::endl;
@@ -128,7 +130,84 @@ void * handle(void * info) {
     if (send_client<0){
       std::cerr << "Error: cannot received from server" << std::endl;
       return NULL;
+    }*/
+
+    //地一行不在cache裡
+    if (cache.count(request.line) == 0){
+      std::string server_response = request_directly(client_fd, server_fd,buffer,bytes_received);
+      Response response1 = Response(server_response);
+      
+      if(response1.canCache){
+        std::cout<<response1.input;//
+        cache[request.line] = response1;
+      }
     }
+    else{
+      std::cout<<"\n\ncache suceed\n\n";//
+      std::string str=cache[request.line].input;
+      char server_response[BUFFER_LEN] = {0};
+      str.copy(server_response, str.size() + 1);
+      server_response[str.size()] = '\0';
+      ssize_t send_client = send(client_fd, server_response, str.size() , MSG_NOSIGNAL); 
+      if (send_client<0){
+        std::cerr << "Error: cannot received from server" << std::endl;
+        return NULL;
+      }
+    }
+    //地一行在cache裡
+    /*else{
+      //no-cache
+      if(getRequest.needRevalidate && !getRequest.needCheckTime){
+        revalidate(server_fd, client_fd, getRequest);
+      }
+      //must-revalidate
+      else if(getRequest.needRevalidate && getRequest.needCheckTime){
+        time_t now = std::time(nullptr);
+        std::tm* timeinfo = std::gmtime(&now);
+        Date now_date=new Date(timeinfo);
+
+        if (getRequest.expire_time.isLessThan(now_date)){//過期,直接向server請求//?不是請求而是check 304
+            std::string server_response = Request_directly(server_fd, client_fd, buffer);
+            cache_getrequest[getRequest->line] = getRequest;
+            cache_response[getRequest->line] = server_response;
+        }
+        else{//沒過期，直接給
+            char send_client_rec = cache_response[getRequest->line].c_str();
+            ssize_t send_client = send(client_fd, send_client_rec, sizeof(send_client_rec), MSG_NOSIGNAL);
+            if (send_client<0){
+              std::cerr << "Error: cannot received from server" << std::endl;
+              return NULL;
+          } 
+        }
+      }
+      //max-age
+      else if(!getRequest.needRevalidate && getRequest.needCheckTime){
+        time_t now = std::time(nullptr);
+        std::tm* timeinfo = std::gmtime(&now);
+        Date now_date=new Date(timeinfo);
+
+        if (getRequest.expire_time.isLessThan(now_date)){//過期,要驗證
+            void revalidate(server_fd, client_fd, getRequest);
+        }
+        else{//直接給
+            char* send_client_rec = cache_response[getRequest->line].c_str();
+            ssize_t send_client = send(client_fd, send_client_rec, sizeof(send_client_rec), MSG_NOSIGNAL);
+            if (send_client<0){
+              std::cerr << "Error: cannot received from server" << std::endl;
+              return NULL;
+          } 
+        }
+      }
+      //public
+      else if(!getRequest.needRevalidate && !getRequest.needCheckTime){
+        char* send_client_rec = cache_response[getRequest->line].c_str();
+        ssize_t send_client = send(client_fd, send_client_rec, sizeof(send_client_rec), MSG_NOSIGNAL);
+        if (send_client<0){
+          std::cerr << "Error: cannot received from server" << std::endl;
+          return NULL;
+        } 
+      }
+    }*/
   }
   //none
   else {

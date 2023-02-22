@@ -2,7 +2,7 @@
 #include "head.h"
 
 
-class response{
+class Response{
   public:
     std::string input;
     std::string line;
@@ -21,7 +21,9 @@ class response{
 
 
     //constructor
-    response(std::string input) : input(input),line(""),statusCode(""),etag(""),
+    Response():input(""),line(""),statusCode(""),etag(""),
+        canCache(false),needRevalidate(false),needCheckTime(false){}
+    Response(std::string input) : input(input),line(""),statusCode(""),etag(""),
         canCache(false),needRevalidate(false),needCheckTime(false){
         Parse();
     }
