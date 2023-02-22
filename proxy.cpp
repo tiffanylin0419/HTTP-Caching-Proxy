@@ -53,23 +53,30 @@ void httpConnect(int client_fd, int server_fd){
   }
 }
 
-void httpPost(int client_fd, int server_fd,char* buffer1 ,ssize_t bytes_received){
+//like post but return the http response
+std::string request_directly(int client_fd, int server_fd,char* buffer1 ,ssize_t bytes_received){
   ssize_t server_send = send(server_fd, buffer1, bytes_received, MSG_NOSIGNAL); 
-    if (server_send<0){
-      std::cerr << "Error: cannot send to server" << std::endl;
-      return;
-    }
-    char buffer2[BUFFER_LEN] = {0};
-    bytes_received  = recv(server_fd, buffer2, sizeof(buffer2), 0);
-    if (bytes_received <0){
-      std::cerr << "Error: cannot received from server" << std::endl;
-      return;
-    }
-    ssize_t send_client = send(client_fd, buffer2, bytes_received , MSG_NOSIGNAL); 
-    if (send_client<0){
-      std::cerr << "Error: cannot received from server" << std::endl;
-      return;
-    }
+  if (server_send<0){
+    std::cerr << "Error: cannot send to server" << std::endl;
+    return NULL;
+  }
+  char buffer2[BUFFER_LEN] = {0};
+  bytes_received  = recv(server_fd, buffer2, sizeof(buffer2), 0);
+  if (bytes_received <0){
+    std::cerr << "Error: cannot received from server" << std::endl;
+    return NULL;
+  }
+  ssize_t send_client = send(client_fd, buffer2, bytes_received , MSG_NOSIGNAL); 
+  if (send_client<0){
+    std::cerr << "Error: cannot received from server" << std::endl;
+    return NULL;
+  }
+  std::string str(buffer2);
+  return str;
+}
+
+void httpPost(int client_fd, int server_fd,char* buffer1 ,ssize_t bytes_received){
+  request_directly(client_fd, server_fd, buffer1 , bytes_received);
 }
 
 void * handle(void * info) {
