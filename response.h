@@ -26,9 +26,9 @@ class Response{
     Response(std::string input) : input(input),line(""),statusCode(""),etag(""),
         canCache(false),needRevalidate(false),needCheckTime(false){
         Parse();
-        canCache=true;
+        /*canCache=true;
         needRevalidate=true;
-        needCheckTime=false;
+        needCheckTime=true;*/
     }
 
     void Parse(){
@@ -76,6 +76,7 @@ class Response{
         else{
             canCache=true;
             if(cache_control.find("no-cache") != std::string::npos){needRevalidate=true;}
+            else if(cache_control.find("must-revalidate") != std::string::npos){needRevalidate=true;needCheckTime=true;}
             else if(cache_control.find("max-age") != std::string::npos){//max-age
                 std::size_t pos = cache_control.find("max-age=");
                 std::string max_age_s=cache_control.substr(pos+8);
@@ -85,7 +86,6 @@ class Response{
                 }
                 needCheckTime=true;
             }
-            else if(cache_control.find("must-revalidate") != std::string::npos){needRevalidate=true;needCheckTime=true;}
             else if(cache_control.find("public") != std::string::npos){}
         }
     }

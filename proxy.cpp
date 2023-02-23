@@ -18,7 +18,7 @@ pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 std::map<std::string, Response> cache;
 
 
-void send_client_cache_directly(int client_fd, Request request){
+int send_client_cache_directly(int client_fd, Request request){
   std::string str=cache[request.line].input;
   char server_response[BUFFER_LEN] = {0};
   str.copy(server_response, str.size() + 1);
@@ -26,8 +26,9 @@ void send_client_cache_directly(int client_fd, Request request){
   ssize_t send_client = send(client_fd, server_response, str.size() , MSG_NOSIGNAL); 
   if (send_client<0){
     std::cerr << "Error: send! client!" << std::endl;
-    return;
+    return -1;
   }
+  return 0;
 }
 
 //todo
@@ -97,7 +98,9 @@ int revalidate(int server_fd,int client_fd, Request request, Response response){
 
   //send to client
   if (status_code == "304" ){//same, 直接返還給客戶
-    send_client_cache_directly(client_fd, request);
+    if(send_client_cache_directly(client_fd, request)==-1){
+      return -1;
+    }
   }
   else{//change, 更新map
 
@@ -221,61 +224,46 @@ void * handle(void * info) {
         std::cout<<"\n\nrevalidate suceed\n\n";
         if(revalidate(server_fd, client_fd, request, response)==-1){return NULL;}
       }
-      else{//todo: change to if public 
-        std::cout<<"\n\ncache suceed\n\n";
-        send_client_cache_directly(client_fd,request);
-      }
       //must-revalidate
-      /*else if(response.needRevalidate && response.needCheckTime){
+      else if(response.needRevalidate && response.needCheckTime){
         time_t now = std::time(nullptr);
         std::tm* timeinfo = std::gmtime(&now);
-        Date now_date=new Date(timeinfo);
+        Date now_date=Date(*timeinfo);
 
-        if (getRequest.expire_time.isLessThan(now_date)){//過期,直接向server請求//?不是請求而是check 304
-            std::string server_response = request_directly(client_fd, server_fd,request);
-            if(server_response==""){
-              return NULL;
-            }
-            cache_getrequest[getRequest->line] = getRequest;
-            cache_response[getRequest->line] = server_response;
+        if(response.max_age_time.isEmpty() || response.max_age_time.isLessThan(now_date)){//沒時間或已經過期，check
+          if(revalidate(server_fd, client_fd, request, response)==-1){return NULL;}
         }
-        else{//沒過期，直接給
-            char send_client_rec = cache_response[getRequest->line].c_str();
-            ssize_t send_client = send(client_fd, send_client_rec, sizeof(send_client_rec), MSG_NOSIGNAL);
-            if (send_client<0){
-              std::cerr << "Error: cannot received from server" << std::endl;
-              return NULL;
-          } 
+        else {//沒過期,用cache
+          
+          if(send_client_cache_directly(client_fd, request)==-1){return NULL;}
         }
       }
-      
+
       //max-age
-      else if(!getRequest.needRevalidate && getRequest.needCheckTime){
+      else if(!response.needRevalidate && response.needCheckTime){
         time_t now = std::time(nullptr);
         std::tm* timeinfo = std::gmtime(&now);
-        Date now_date=new Date(timeinfo);
+        Date now_date=Date(*timeinfo);
 
-        if (getRequest.expire_time.isLessThan(now_date)){//過期,要驗證
-            void revalidate(server_fd, client_fd, getRequest);
+        if(response.max_age_time.isEmpty() ){
+          return NULL;
         }
-        else{//直接給
-            char* send_client_rec = cache_response[getRequest->line].c_str();
-            ssize_t send_client = send(client_fd, send_client_rec, sizeof(send_client_rec), MSG_NOSIGNAL);
-            if (send_client<0){
-              std::cerr << "Error: cannot received from server" << std::endl;
-              return NULL;
-          } 
+        else if(response.max_age_time.isLessThan(now_date)){//已經過期，重新要
+          if(request_directly(client_fd, server_fd, request)==""){
+            return NULL;
+          }
         }
+        else {//沒過期,用cache
+          if(send_client_cache_directly(client_fd, request)==-1){return NULL;}
+        }
+
       }
       //public
-      else if(!getRequest.needRevalidate && !getRequest.needCheckTime){
-        char* send_client_rec = cache_response[getRequest->line].c_str();
-        ssize_t send_client = send(client_fd, send_client_rec, sizeof(send_client_rec), MSG_NOSIGNAL);
-        if (send_client<0){
-          std::cerr << "Error: cannot received from server" << std::endl;
-          return NULL;
-        } 
-      }*/
+      else if(!response.needRevalidate && !response.needCheckTime){//todo: change to if public 
+        std::cout<<"\n\ncache suceed\n\n";
+        if(send_client_cache_directly(client_fd,request)==-1){return NULL;}
+      }
+      else{return NULL;}
     }
   }
   //none
