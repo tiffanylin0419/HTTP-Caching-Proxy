@@ -47,15 +47,20 @@ std::string request_directly(int client_fd, int server_fd,Request request){
     return "";
   }
   char buffer2[BUFFER_LEN] = {0};
-  bytes_received  = recv(server_fd, buffer2, sizeof(buffer2), 0);
-  if (bytes_received <0){
-    std::cerr << "Error: recv! server!" << std::endl;
-    return "";
-  }
-  ssize_t send_client = send(client_fd, buffer2, bytes_received , MSG_NOSIGNAL); 
-  if (send_client<0){
-    std::cerr << "Error: send! client!" << std::endl;
-    return "";
+  while (1) {  //use while loop for processing chunk data
+    int bytes_received = recv(server_fd, buffer2, sizeof(buffer2), 0);
+    if (bytes_received == 0) {
+      std::cout << "chunked break\n";
+      break;
+    }else if (bytes_received<0){
+      std::cerr << "Error: send! client!" << std::endl;
+      return "";
+    }
+    ssize_t send_client = send(client_fd, buffer2, bytes_received , MSG_NOSIGNAL); 
+    if (send_client<0){
+      std::cerr << "Error: send! client!" << std::endl;
+      return "";
+    }
   }
   std::string buffer2_s(buffer2);
   return buffer2_s;
@@ -201,6 +206,8 @@ void * handle(void * info) {
   //get
   else if (request.method=="GET"){
     std::cout<<"get"<<std::endl;
+    httpPost(client_fd, server_fd,request);
+    /*
     //地一行不在cache裡
     if (cache.count(request.line) == 0){
       //DRY
@@ -263,7 +270,7 @@ void * handle(void * info) {
         if(send_client_cache_directly(client_fd,request)==-1){return NULL;}
       }
       else{return NULL;}
-    }
+    }*/
   }
   //none
   else {
