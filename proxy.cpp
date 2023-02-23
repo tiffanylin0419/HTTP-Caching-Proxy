@@ -30,35 +30,38 @@ void send_client_cache_directly(int client_fd, Request request){
   }
 }
 
-
+//todo
+//
 //like post but return the http response
 std::string request_directly(int client_fd, int server_fd,Request request){
   std::string str=request.input;
   char buffer1[BUFFER_LEN] = {0};
   str.copy(buffer1, str.size() + 1);
+  buffer1[str.size()] = '\0';
+
   ssize_t bytes_received=str.size();
   ssize_t server_send = send(server_fd, buffer1, bytes_received, MSG_NOSIGNAL); 
   if (server_send<0){
     std::cerr << "Error: send! server!" << std::endl;
-    return NULL;
+    return "";
   }
   char buffer2[BUFFER_LEN] = {0};
   bytes_received  = recv(server_fd, buffer2, sizeof(buffer2), 0);
   if (bytes_received <0){
     std::cerr << "Error: recv! server!" << std::endl;
-    return NULL;
+    return "";
   }
   ssize_t send_client = send(client_fd, buffer2, bytes_received , MSG_NOSIGNAL); 
   if (send_client<0){
     std::cerr << "Error: send! client!" << std::endl;
-    return NULL;
+    return "";
   }
   std::string buffer2_s(buffer2);
   return buffer2_s;
 }
 
 
-void revalidate(int server_fd,int client_fd, Request request, Response response){
+int revalidate(int server_fd,int client_fd, Request request, Response response){
   //check response value, append to request
   std::string str=request.input;
   
@@ -73,38 +76,43 @@ void revalidate(int server_fd,int client_fd, Request request, Response response)
 
   char request_new[BUFFER_LEN] = {0};
   str.copy(request_new, str.size() + 1);
+  request_new[str.size()] = '\0';
 
   //send to server
   ssize_t server_send = send(server_fd, request_new, sizeof(request_new), MSG_NOSIGNAL); 
   if (server_send<0){
     std::cerr << "Error: send! server!" << std::endl;
-    return;
+    return -1;
   }
   //recv from server
   char buffer[BUFFER_LEN] = {0};
   ssize_t bytes_received  = recv(server_fd, buffer, sizeof(buffer), 0);
   if (bytes_received <0){
     std::cerr << "Error: recv server!" << std::endl;
-    return;
+    return -1;
   }
   std::string http_response(buffer, BUFFER_LEN);
-  Response r=Response(http_response);
-  std::string status_code = r.statusCode;
+  Response response_new=Response(http_response);
+  std::string status_code = response_new.statusCode;
 
   //send to client
   if (status_code == "304" ){//same, 直接返還給客戶
     send_client_cache_directly(client_fd, request);
   }
   else{//change, 更新map
-    //DRY
-    std::string server_response = request_directly(client_fd, server_fd,request);
-    Response response_new = Response(server_response);
+
+
+    ssize_t send_client =send(client_fd, buffer,bytes_received, 0);
+    if (send_client<0){
+      std::cerr << "Error: send! client!" << std::endl;
+      return -1;
+    }
     
     if(response_new.canCache){
       cache[request.line] = response_new;
     }
   }
-  
+  return 0;
 }
 
 
@@ -151,7 +159,10 @@ void httpConnect(int client_fd, int server_fd){
 
 
 void httpPost(int client_fd, int server_fd,Request request){
-  request_directly(client_fd, server_fd, request);
+  std::string server_response =request_directly (client_fd, server_fd, request);
+  if(server_response==""){
+    return;
+  }
 }
 
 void * handle(void * info) {
@@ -191,6 +202,9 @@ void * handle(void * info) {
     if (cache.count(request.line) == 0){
       //DRY
       std::string server_response = request_directly(client_fd, server_fd,request);
+      if(server_response==""){
+        return NULL;
+      }
       Response response = Response(server_response);
       std::cout<<"\n\n"<<response.input<<"\n";
 
@@ -206,20 +220,23 @@ void * handle(void * info) {
       //no-cache
       if(response.needRevalidate && !response.needCheckTime){
         std::cout<<"\n\nrevalidate suceed\n\n";
-        revalidate(server_fd, client_fd, request, response);
+        if(revalidate(server_fd, client_fd, request, response)==-1){return NULL;}
       }
-      else{
+      else{//todo: change to if public 
         std::cout<<"\n\ncache suceed\n\n";
         send_client_cache_directly(client_fd,request);
       }
       //must-revalidate
-      /*else if(getRequest.needRevalidate && getRequest.needCheckTime){
+      /*else if(response.needRevalidate && response.needCheckTime){
         time_t now = std::time(nullptr);
         std::tm* timeinfo = std::gmtime(&now);
         Date now_date=new Date(timeinfo);
 
         if (getRequest.expire_time.isLessThan(now_date)){//過期,直接向server請求//?不是請求而是check 304
-            std::string server_response = Request_directly(server_fd, client_fd, buffer);
+            std::string server_response = request_directly(client_fd, server_fd,request);
+            if(server_response==""){
+              return NULL;
+            }
             cache_getrequest[getRequest->line] = getRequest;
             cache_response[getRequest->line] = server_response;
         }
@@ -232,6 +249,7 @@ void * handle(void * info) {
           } 
         }
       }
+      
       //max-age
       else if(!getRequest.needRevalidate && getRequest.needCheckTime){
         time_t now = std::time(nullptr);
