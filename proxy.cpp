@@ -73,7 +73,7 @@ int revalidate(int server_fd,int client_fd, Request request, Response response){
     std::string ifModifiedSince = "If-Modified-Since: " + response.last_modified_time.toString() + "\r\n";
     str = str + ifModifiedSince;
   }
-
+  //std::cout<<"\n\nmy response: \n\n"<<str<<"\n\n";
   char request_new[BUFFER_LEN] = {0};
   str.copy(request_new, str.size() + 1);
   request_new[str.size()] = '\0';
@@ -209,14 +209,13 @@ void * handle(void * info) {
       std::cout<<"\n\n"<<response.input<<"\n";
 
       if(response.canCache){
-        std::cout<<response.input;//
+        std::cout<<response.input;
         cache[request.line] = response;
       }
     }
     //地一行在cache裡
     else{
       Response response = Response(cache[request.line]);
-      std::cout<<"\n\n"<<response.input<<"\n";
       //no-cache
       if(response.needRevalidate && !response.needCheckTime){
         std::cout<<"\n\nrevalidate suceed\n\n";
