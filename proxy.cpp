@@ -34,20 +34,19 @@ int send_client_cache_directly(int client_fd, Request request){
 //todo
 //
 //like post but return the http response
-std::string request_directly(int client_fd, int server_fd,Request request){
+std::string request_directly(int client_fd, int server_fd,Request request, bool post){
   std::string str=request.input;
   char buffer1[BUFFER_LEN] = {0};
   str.copy(buffer1, str.size() + 1);
   buffer1[str.size()] = '\0';
 
-  ssize_t bytes_received=str.size();
-  ssize_t server_send = send(server_fd, buffer1, bytes_received, MSG_NOSIGNAL); 
+  ssize_t server_send = send(server_fd, buffer1, str.size(), MSG_NOSIGNAL); 
   if (server_send<0){
     std::cerr << "Error: send! server!" << std::endl;
     return "";
   }
   char buffer2[BUFFER_LEN] = {0};
-  while (1) {  //use while loop for processing chunk data
+  while (true) {  //use while loop for processing chunk data
     int bytes_received = recv(server_fd, buffer2, sizeof(buffer2), 0);
     if (bytes_received == 0) {
       std::cout << "chunked break\n";
@@ -167,7 +166,7 @@ void httpConnect(int client_fd, int server_fd){
 
 
 void httpPost(int client_fd, int server_fd,Request request){
-  std::string server_response =request_directly (client_fd, server_fd, request);
+  std::string server_response =request_directly (client_fd, server_fd, request, true);
   if(server_response==""){
     return;
   }
@@ -206,21 +205,21 @@ void * handle(void * info) {
   //get
   else if (request.method=="GET"){
     std::cout<<"get"<<std::endl;
-    httpPost(client_fd, server_fd,request);
-    /*
     //地一行不在cache裡
     if (cache.count(request.line) == 0){
       //DRY
-      std::string server_response = request_directly(client_fd, server_fd,request);
+      std::string server_response = request_directly(client_fd, server_fd,request, false);
       if(server_response==""){
         return NULL;
       }
-      Response response = Response(server_response);
-      std::cout<<"\n\n"<<response.input<<"\n";
+      if(server_response!="chunk"){
+        Response response = Response(server_response);
+        std::cout<<"\n\n"<<response.input<<"\n";
 
-      if(response.canCache){
-        std::cout<<response.input;
-        cache[request.line] = response;
+        if(response.canCache){
+          std::cout<<response.input;
+          cache[request.line] = response;
+        }
       }
     }
     //地一行在cache裡
@@ -255,8 +254,19 @@ void * handle(void * info) {
 
         if((! response.max_age_time.isEmpty() && response.max_age_time.isLessThan(now_date))||
           (! response.expire_time.isEmpty() && response.expire_time.isLessThan(now_date))){//已經過期，重新要
-          if(request_directly(client_fd, server_fd, request)==""){
+          //DRY
+          std::string server_response = request_directly(client_fd, server_fd,request, false);
+          if(server_response==""){
             return NULL;
+          }
+          if(server_response!="chunk"){
+            Response response = Response(server_response);
+            std::cout<<"\n\n"<<response.input<<"\n";
+
+            if(response.canCache){
+              std::cout<<response.input;
+              cache[request.line] = response;
+            }
           }
         }
         else {//沒過期,用cache
@@ -270,7 +280,7 @@ void * handle(void * info) {
         if(send_client_cache_directly(client_fd,request)==-1){return NULL;}
       }
       else{return NULL;}
-    }*/
+    }
   }
   //none
   else {
