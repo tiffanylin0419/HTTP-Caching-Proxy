@@ -25,7 +25,7 @@ void send_client_cache_directly(int client_fd, Request request){
   server_response[str.size()] = '\0';
   ssize_t send_client = send(client_fd, server_response, str.size() , MSG_NOSIGNAL); 
   if (send_client<0){
-    std::cerr << "Error: cannot received from server" << std::endl;
+    std::cerr << "Error: send! client!" << std::endl;
     return;
   }
 }
@@ -39,49 +39,53 @@ std::string request_directly(int client_fd, int server_fd,Request request){
   ssize_t bytes_received=str.size();
   ssize_t server_send = send(server_fd, buffer1, bytes_received, MSG_NOSIGNAL); 
   if (server_send<0){
-    std::cerr << "Error: cannot send to server" << std::endl;
+    std::cerr << "Error: send! server!" << std::endl;
     return NULL;
   }
   char buffer2[BUFFER_LEN] = {0};
   bytes_received  = recv(server_fd, buffer2, sizeof(buffer2), 0);
   if (bytes_received <0){
-    std::cerr << "Error: cannot received from server" << std::endl;
+    std::cerr << "Error: recv! server!" << std::endl;
     return NULL;
   }
   ssize_t send_client = send(client_fd, buffer2, bytes_received , MSG_NOSIGNAL); 
   if (send_client<0){
-    std::cerr << "Error: cannot received from server" << std::endl;
+    std::cerr << "Error: send! client!" << std::endl;
     return NULL;
   }
   std::string buffer2_s(buffer2);
   return buffer2_s;
 }
-/*
+
 
 void revalidate(int server_fd,int client_fd, Request request, Response response){
   //check response value, append to request
-  //todo: do not change request inputs
+  std::string str=request.input;
+  
   if (response.etag != "") {
-    std::string ifNoneMatch = "If-None-Match: " + response.etag ＋ "\r\n";
-    std::string request.input = request.input + ifNoneMatch;
+    std::string ifNoneMatch = "If-None-Match: " + response.etag + "\r\n";
+    str = str + ifNoneMatch;
   }
   if (!response.last_modified_time.isEmpty()){
-    std::string ifModifiedSince = "If-Modified-Since: " + response.last_modified_time.toString() ＋ "\r\n";
-    std::string request.input = request.input + ifModifiedSince;
+    std::string ifModifiedSince = "If-Modified-Since: " + response.last_modified_time.toString() + "\r\n";
+    str = str + ifModifiedSince;
   }
 
+  char request_new[BUFFER_LEN] = {0};
+  str.copy(request_new, str.size() + 1);
+
   //send to server
-  ssize_t server_send = send(server_fd, request.input, sizeof(request.input), MSG_NOSIGNAL); 
+  ssize_t server_send = send(server_fd, request_new, sizeof(request_new), MSG_NOSIGNAL); 
   if (server_send<0){
-    std::cerr << "Error: cannot send to server" << std::endl;
-    return NULL;
+    std::cerr << "Error: send! server!" << std::endl;
+    return;
   }
   //recv from server
   char buffer[BUFFER_LEN] = {0};
   ssize_t bytes_received  = recv(server_fd, buffer, sizeof(buffer), 0);
   if (bytes_received <0){
-    std::cerr << "Error: cannot received from server" << std::endl;
-    return NULL;
+    std::cerr << "Error: recv server!" << std::endl;
+    return;
   }
   std::string http_response(buffer, BUFFER_LEN);
   Response r=Response(http_response);
@@ -92,17 +96,16 @@ void revalidate(int server_fd,int client_fd, Request request, Response response)
     send_client_cache_directly(client_fd, request);
   }
   else{//change, 更新map
-    ssize_t send_client = send(client_fd, buffer, sizeof(buffer), MSG_NOSIGNAL);
-    if (send_client<0){
-    std::cerr << "Error: cannot received from server" << std::endl;
-    return NULL;
+    //DRY
+    std::string server_response = request_directly(client_fd, server_fd,request);
+    Response response_new = Response(server_response);
+    
+    if(response_new.canCache){
+      cache[request.line] = response_new;
     }
-    std::string store_cache(buffer);
-    cache_getrequest[getRequest->line] = getRequest;
-    cache_response[getRequest->line] = store_cache;
   }
   
-}*/
+}
 
 
 
@@ -183,47 +186,34 @@ void * handle(void * info) {
   }
   //get
   else if (request.method=="GET"){
-    //todo
-    /*std::cout<<"get"<<std::endl;
-    ssize_t server_send = send(server_fd, buffer, sizeof(buffer), MSG_NOSIGNAL); 
-    if (server_send<0){
-      std::cerr << "Error: cannot send to server" << std::endl;
-      return NULL;
-    }
-    char buffer_from_sever[BUFFER_LEN] = {0};
-    ssize_t bytes_received  = recv(server_fd, buffer_from_sever, sizeof(buffer_from_sever), 0);
-    if (bytes_received <0){
-      std::cerr << "Error: cannot received from server" << std::endl;
-      return NULL;
-    }
-    ssize_t send_client = send(client_fd, buffer_from_sever, bytes_received , MSG_NOSIGNAL); 
-    if (send_client<0){
-      std::cerr << "Error: cannot received from server" << std::endl;
-      return NULL;
-    }*/
-
+    std::cout<<"get"<<std::endl;
     //地一行不在cache裡
     if (cache.count(request.line) == 0){
+      //DRY
       std::string server_response = request_directly(client_fd, server_fd,request);
       Response response = Response(server_response);
-      
+      std::cout<<"\n\n"<<response.input<<"\n";
+
       if(response.canCache){
         std::cout<<response.input;//
         cache[request.line] = response;
       }
     }
-    else{
-      std::cout<<"\n\ncache suceed\n\n";
-      send_client_cache_directly(client_fd,request);
-    }
     //地一行在cache裡
-    /*else{
+    else{
+      Response response = Response(cache[request.line]);
+      std::cout<<"\n\n"<<response.input<<"\n";
       //no-cache
       if(response.needRevalidate && !response.needCheckTime){
-        revalidate(server_fd, client_fd, request);
+        std::cout<<"\n\nrevalidate suceed\n\n";
+        revalidate(server_fd, client_fd, request, response);
+      }
+      else{
+        std::cout<<"\n\ncache suceed\n\n";
+        send_client_cache_directly(client_fd,request);
       }
       //must-revalidate
-      else if(getRequest.needRevalidate && getRequest.needCheckTime){
+      /*else if(getRequest.needRevalidate && getRequest.needCheckTime){
         time_t now = std::time(nullptr);
         std::tm* timeinfo = std::gmtime(&now);
         Date now_date=new Date(timeinfo);
@@ -268,11 +258,13 @@ void * handle(void * info) {
           std::cerr << "Error: cannot received from server" << std::endl;
           return NULL;
         } 
-      }
-    }*/
+      }*/
+    }
   }
   //none
   else {
+    //todo: 
+    //send client 400 error
     return NULL;
   }
   close(server_fd);

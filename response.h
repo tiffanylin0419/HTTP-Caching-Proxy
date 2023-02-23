@@ -26,6 +26,9 @@ class Response{
     Response(std::string input) : input(input),line(""),statusCode(""),etag(""),
         canCache(false),needRevalidate(false),needCheckTime(false){
         Parse();
+        /*canCache=true;
+        needRevalidate=true;
+        needCheckTime=false;*/
     }
 
     void Parse(){
