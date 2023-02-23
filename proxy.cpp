@@ -230,25 +230,24 @@ void * handle(void * info) {
         std::tm* timeinfo = std::gmtime(&now);
         Date now_date=Date(*timeinfo);
 
-        if(response.max_age_time.isEmpty() || response.max_age_time.isLessThan(now_date)){//沒時間或已經過期，check
+        if((response.max_age_time.isEmpty() && response.expire_time.isEmpty()) ||
+          (! response.max_age_time.isEmpty() && response.max_age_time.isLessThan(now_date))||
+          (! response.expire_time.isEmpty() && response.expire_time.isLessThan(now_date))){//2都沒or任一過期，check
           if(revalidate(server_fd, client_fd, request, response)==-1){return NULL;}
         }
         else {//沒過期,用cache
-          
           if(send_client_cache_directly(client_fd, request)==-1){return NULL;}
         }
       }
 
-      //max-age
-      else if(!response.needRevalidate && response.needCheckTime){
+      //max-age or expire date
+      else if((!response.needRevalidate && response.needCheckTime)|| !response.expire_time.isEmpty()){
         time_t now = std::time(nullptr);
         std::tm* timeinfo = std::gmtime(&now);
         Date now_date=Date(*timeinfo);
 
-        if(response.max_age_time.isEmpty() ){
-          return NULL;
-        }
-        else if(response.max_age_time.isLessThan(now_date)){//已經過期，重新要
+        if((! response.max_age_time.isEmpty() && response.max_age_time.isLessThan(now_date))||
+          (! response.expire_time.isEmpty() && response.expire_time.isLessThan(now_date))){//已經過期，重新要
           if(request_directly(client_fd, server_fd, request)==""){
             return NULL;
           }
