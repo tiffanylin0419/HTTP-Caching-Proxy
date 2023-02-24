@@ -1,7 +1,5 @@
 #include "proxy.h"
 
-#include <pthread.h>
-
 #include "client_info.h"
 
 #include "proxy_function.h"
@@ -145,12 +143,7 @@ int revalidate(int server_fd,int client_fd, Request request, Response response){
     }
     
     if(response_new.canCache){
-      //cache[request.line] = response_new;
-
       if(response_new.statusCode=="200"){
-        /*if(cache.size()>=100){
-          cache.erase(cache.begin());
-        }*/
         cache[request.line] = response_new;
       }
     }
@@ -215,7 +208,6 @@ void * handle(void * info) {
     return NULL;
   }
   std::string buffer_s(buffer);
-  //std::cout<<buffer<<std::endl;//?
   if (buffer_s == ""||buffer_s == "\r" || buffer_s == "\n" || buffer_s == "\r\n"){
     return NULL;
   }
@@ -252,12 +244,7 @@ void * handle(void * info) {
 
         if(response.canCache){
           std::cout<<response.input;
-          //cache[request.line] = response;
-
           if(response.statusCode=="200"){
-            /*if(cache.size()>=100){
-              cache.erase(cache.begin());
-            }*/
             cache[request.line] = response;
           }
         }
@@ -307,12 +294,7 @@ void * handle(void * info) {
 
             if(response.canCache){
               std::cout<<response.input;
-              //cache[request.line] = response;
-
               if(response.statusCode=="200"){
-                /*if(cache.size()>=100){
-                  cache.erase(cache.begin());
-                }*/
                 cache[request.line] = response;
               }
             }
