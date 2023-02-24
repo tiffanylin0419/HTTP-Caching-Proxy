@@ -18,13 +18,12 @@ class Response{
     bool canCache;
     bool needRevalidate;
     bool needCheckTime;
-    bool isChunk;
 
     //constructor
     Response():input(""),line(""),statusCode(""),etag(""),
-        canCache(false),needRevalidate(false),needCheckTime(false),isChunk(false){}
+        canCache(false),needRevalidate(false),needCheckTime(false){}
     Response(std::string input) : input(input),line(""),statusCode(""),etag(""),
-        canCache(false),needRevalidate(false),needCheckTime(false),isChunk(false){
+        canCache(false),needRevalidate(false),needCheckTime(false){
         Parse();
         /*canCache=true;
         needRevalidate=true;
@@ -69,11 +68,7 @@ class Response{
             else if (parsedSpace[i]=="Cache-Control:"){
                 cache_control=parsedSpace[i+1];
             }
-            else if(parsedSpace[i]=="Transfer-Encoding:"){
-                if (true){//(i+1<parsedSpace.size() && parsedSpace[i+1]=="chunked")||(i+2<parsedSpace.size() && parsedSpace[i+2]=="chunked")){
-                    isChunk=true;
-                }
-            }
+
 
         }
 
