@@ -152,13 +152,9 @@ int revalidate(int server_fd,int client_fd, Request request, Response response){
   return 0;
 }
 
-
-
-
 //todo: check recv,send return value
 void httpConnect(int client_fd, int server_fd){
-  const char* response="HTTP/1.1 200 OK\r\n\r\n";
-  send(client_fd, response,RESPONSE_LEN, 0);
+  okGood200(client_fd);
   fd_set readfds;
   int nfds = server_fd > client_fd ? server_fd + 1 : client_fd + 1;//todo: change this line
 
