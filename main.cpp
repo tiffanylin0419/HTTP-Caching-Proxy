@@ -3,11 +3,10 @@
 
 #include <pthread.h>
 
-
+#define PORT "12345"
 
 int main() {  
-  //proxy
-  const char * port = "3333";
+  const char * port = PORT;
   proxy * myproxy = new proxy(port);
   myproxy->run();
   return 1;
