@@ -9,14 +9,25 @@
 #include "function.h"
 #include "request.h"
 #include "response.h"
-
+#include "error.h"
 
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 #define RESPONSE_LEN 20
-#define BUFFER_LEN 50000
 
 std::map<std::string, Response> cache;
 
+int check502(int client_fd, char buffer[], ssize_t len){
+  std::string str(buffer);
+  //valid
+  if(str.find("Content-Type:") != std::string::npos){
+    return 0;
+  }
+  //invalid
+  else{
+    error502(client_fd);
+    return -1;
+  }
+}
 
 int send_client_cache_directly(int client_fd, Request request){
   std::string str=cache[request.line].input;
@@ -47,12 +58,16 @@ std::string request_directly(int client_fd, int server_fd,Request request){
   }
 
   char buffer2[BUFFER_LEN] = {0};
-  //
   ssize_t bytes_received = recv(server_fd, buffer2, sizeof(buffer2), 0);
   if (bytes_received<=0){
-    std::cerr << "Error: send! client! or chunck end" << std::endl;
+    std::cerr << "Error: recv! server!" << std::endl;
     return "";
   }
+  buffer2[bytes_received]='\0';
+  if(check502(client_fd,buffer2, bytes_received)==-1){
+    return "";
+  }
+  
   std::string buffer2_ss(buffer2);
   bool chunk=false;
   if(buffer2_ss.find("chunk") != std::string::npos){chunk=true;}
@@ -65,9 +80,10 @@ std::string request_directly(int client_fd, int server_fd,Request request){
   while (chunk) {  //use while loop for processing chunk data
     bytes_received = recv(server_fd, buffer2, sizeof(buffer2), 0);
     if (bytes_received<=0){
-      std::cerr << "Error: send! client! or chunck end" << std::endl;
+      std::cerr << "Chunck End" << std::endl;
       return "";
     }
+    buffer2[bytes_received]='\0';
     send_client = send(client_fd, buffer2, bytes_received , MSG_NOSIGNAL); 
     if (send_client<0){
       std::cerr << "Error: send! client!" << std::endl;
@@ -106,6 +122,10 @@ int revalidate(int server_fd,int client_fd, Request request, Response response){
   ssize_t bytes_received  = recv(server_fd, buffer, sizeof(buffer), 0);
   if (bytes_received <0){
     std::cerr << "Error: recv server!" << std::endl;
+    return -1;
+  }
+  buffer[bytes_received]='\0';
+  if(check502(client_fd,buffer, bytes_received)==-1){
     return -1;
   }
   std::string http_response(buffer, BUFFER_LEN);
@@ -158,7 +178,8 @@ void httpConnect(int client_fd, int server_fd){
         return;
       }
       buffer1[bytes_received]='\0';
-      send(client_fd, buffer1,bytes_received, 0) ;
+      
+      send(client_fd, buffer1,bytes_received, 0);
     }
     
     if (FD_ISSET(client_fd, &readfds)) {
@@ -283,14 +304,17 @@ void * handle(void * info) {
         else {//沒過期,用cache
           if(send_client_cache_directly(client_fd, request)==-1){return NULL;}
         }
-
       }
       //public
       else if(!response.needRevalidate && !response.needCheckTime){//todo: change to if public 
         std::cout<<"\n\ncache suceed\n\n";
         if(send_client_cache_directly(client_fd,request)==-1){return NULL;}
       }
-      else{return NULL;}
+      else{
+        std::cerr << "Error: 400" << std::endl;
+        error400(client_fd);
+        return NULL;
+      }
     }
   }
   //none

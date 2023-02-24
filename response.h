@@ -18,7 +18,7 @@ class Response{
     bool canCache;
     bool needRevalidate;
     bool needCheckTime;
-
+    
     //constructor
     Response():input(""),line(""),statusCode(""),etag(""),
         canCache(false),needRevalidate(false),needCheckTime(false){}
