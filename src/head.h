@@ -8,6 +8,6 @@
 #include <ctime>
 #include <map>
 #include <iomanip>
-
+#include <iterator>
 
 #define BUFFER_LEN 50000
