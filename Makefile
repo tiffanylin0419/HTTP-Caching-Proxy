@@ -1,7 +1,7 @@
 all: main
 
 main: main.cpp function.cpp proxy.cpp proxy.h request.h Date.h response.h
-	g++ -g  -o main main.cpp function.cpp proxy.cpp request.cpp -lpthread
+	g++ -g  -o main main.cpp function.cpp proxy.cpp -lpthread
 
 .PHONY:
 	clean

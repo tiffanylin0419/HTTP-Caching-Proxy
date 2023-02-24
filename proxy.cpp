@@ -12,7 +12,6 @@
 #include "error.h"
 
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
-#define RESPONSE_LEN 20
 
 std::map<std::string, Response> cache;
 
