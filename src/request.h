@@ -25,7 +25,7 @@ class Request {
   void Parse() {
     //line
     std::stringstream ssLine(input);
-    getline(ssLine, line, '\n');
+    getline(ssLine, line, '\r');
 
     //method
     std::stringstream ss(input);

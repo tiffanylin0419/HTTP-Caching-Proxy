@@ -34,7 +34,7 @@ class Response{
         
         //line
         std::stringstream ssLine(input);
-        getline(ssLine, line, '\n');
+        getline(ssLine, line, '\r');
 
         //date
         std::string tmpLine;
