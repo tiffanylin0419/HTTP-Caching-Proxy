@@ -69,7 +69,6 @@ class Response{
                 cache_control=parsedSpace[i+1];
             }
 
-
         }
 
         //bool, max-age
