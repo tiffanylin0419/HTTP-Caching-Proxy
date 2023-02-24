@@ -145,7 +145,8 @@ int revalidate(int server_fd,int client_fd, Request request, Response response){
     }
     
     if(response_new.canCache){
-      cache[request.line] = response_new;
+      //cache[request.line] = response_new;
+      if(response_new.statusCode=="200"){cache[request.line] = response_new;}
     }
   }
   return 0;
@@ -245,7 +246,8 @@ void * handle(void * info) {
 
         if(response.canCache){
           std::cout<<response.input;
-          cache[request.line] = response;
+          //cache[request.line] = response;
+          if(response.statusCode=="200"){cache[request.line] = response;}
         }
       }
     }
@@ -292,7 +294,8 @@ void * handle(void * info) {
 
             if(response.canCache){
               std::cout<<response.input;
-              cache[request.line] = response;
+              //cache[request.line] = response;
+              if(response.statusCode=="200"){cache[request.line] = response;}
             }
           }
         }
