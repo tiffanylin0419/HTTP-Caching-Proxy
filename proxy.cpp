@@ -78,32 +78,6 @@ std::string request_directly(int client_fd, int server_fd,Request request){
   return buffer2_s;
 }
 
-std::string request_directly_post(int client_fd, int server_fd,Request request){
-  std::string str=request.input;
-  char buffer1[BUFFER_LEN] = {0};
-  str.copy(buffer1, str.size() + 1);
-  buffer1[str.size()] = '\0';
-  ssize_t bytes_received=str.size();
-  ssize_t server_send = send(server_fd, buffer1, bytes_received, MSG_NOSIGNAL); 
-  if (server_send<0){
-    std::cerr << "Error: send! server!" << std::endl;
-    return "";
-  }
-  char buffer2[BUFFER_LEN] = {0};
-  bytes_received  = recv(server_fd, buffer2, sizeof(buffer2), 0);
-  if (bytes_received <0){
-    std::cerr << "Error: recv! server!" << std::endl;
-    return "";
-  }
-  ssize_t send_client = send(client_fd, buffer2, bytes_received , MSG_NOSIGNAL); 
-  if (send_client<0){
-    std::cerr << "Error: send! client!" << std::endl;
-    return "";
-  }
-  std::string buffer2_s(buffer2);
-  return buffer2_s;
-}
-
 int revalidate(int server_fd,int client_fd, Request request, Response response){
   //check response value, append to request
   std::string str=request.input;
@@ -202,7 +176,7 @@ void httpConnect(int client_fd, int server_fd){
 
 
 int httpPost(int client_fd, int server_fd,Request request){
-  std::string server_response =request_directly_post (client_fd, server_fd, request);
+  std::string server_response =request_directly (client_fd, server_fd, request);
   if(server_response==""){
     return -1;
   }
