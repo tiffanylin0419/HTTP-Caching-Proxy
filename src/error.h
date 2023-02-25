@@ -1,7 +1,7 @@
 
 #include "head.h"
-
 std::ofstream logFile("/var/log/erss/proxy.log");
+
 pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
 
 std::string err502="HTTP/1.1 502 Bad Gateway\r\n\r\n";

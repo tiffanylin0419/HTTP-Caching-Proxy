@@ -7,7 +7,6 @@
 #include "error.h"
 
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
-#define RESPONSE_LEN 20
 
 std::map<std::string, Response> cache;
 
@@ -40,10 +39,6 @@ int send_client_cache_directly(int client_fd, Request request){
   return 0;
 }
 
-//todo
-// now will never cache
-//like post but return the http response
-
 std::string request_directly(int client_fd, int server_fd,Request request){
   std::string str=request.input;
   char buffer1[BUFFER_LEN] = {0};
@@ -56,24 +51,7 @@ std::string request_directly(int client_fd, int server_fd,Request request){
     return "";
   }
   char buffer2[BUFFER_LEN] = {0};
-  /*ssize_t bytes_received  = recv(server_fd, buffer2, sizeof(buffer2), 0);
-  if (bytes_received <0){
-    std::cerr << "Error: recv! server!" << std::endl;
-    return "";
-  }
-  std::string buffer2_ss(buffer2);
-  bool chunk=false;
-  if(buffer2_ss.find("chunk") != std::string::npos){chunk=true;}
-  std::cout<<buffer2_ss<<"\n";//?
-  ssize_t send_client = send(client_fd, buffer2, bytes_received , MSG_NOSIGNAL); 
-  if (send_client<0){
-    std::cerr << "Error: send! client!" << std::endl;
-    return "";
-  }*/
-
   bool isChunk=false;
-  //todo
-  //post會壞掉
   while (true) {  //use while loop for processing chunk data		
     ssize_t bytes_received = recv(server_fd, buffer2, sizeof(buffer2), 0);		
     if (bytes_received<=0){		
@@ -84,7 +62,6 @@ std::string request_directly(int client_fd, int server_fd,Request request){
     /*if(check502(client_fd,buffer2, bytes_received)==-1){
       return "";
     }*/
-
     std::string buffer2_ss(buffer2);
     if(buffer2_ss.find("chunked") != std::string::npos){isChunk=true;}
 
@@ -174,9 +151,7 @@ int revalidate(int server_fd,int client_fd, Request request, Response response){
     }
   }
   else{//change, 更新map
-
-
-    ssize_t send_client =send(client_fd, buffer,bytes_received, 0);
+    ssize_t send_client =send(client_fd, buffer,bytes_received, MSG_NOSIGNAL);
     if (send_client<0){
       std::cerr << "Error: send! client!" << std::endl;
       return -1;
@@ -189,14 +164,10 @@ int revalidate(int server_fd,int client_fd, Request request, Response response){
   return 0;
 }
 
-
-
-
-//todo: check recv,send return value
 void httpConnect(int client_fd, int server_fd){
   okGood200(client_fd);
   fd_set readfds;
-  int nfds = server_fd > client_fd ? server_fd + 1 : client_fd + 1;//todo: change this line
+  int nfds = max(server_fd , client_fd)+1;
 
   while (1) {
 
@@ -214,7 +185,10 @@ void httpConnect(int client_fd, int server_fd){
         return;
       }
       buffer1[bytes_received]='\0';
-      send(client_fd, buffer1,bytes_received, 0) ;
+      if(send(client_fd, buffer1,bytes_received, MSG_NOSIGNAL)<0){
+        std::cerr << "Error: send! client!" << std::endl;   
+        return ;    
+      }
     }
     
     if (FD_ISSET(client_fd, &readfds)) {
@@ -224,7 +198,10 @@ void httpConnect(int client_fd, int server_fd){
         return;
       }
       buffer2[bytes_received]='\0';
-      send(server_fd, buffer2,bytes_received, 0) ;
+      if(send(server_fd, buffer2,bytes_received, MSG_NOSIGNAL)<0){
+        std::cerr << "Error: send! client!" << std::endl;   
+        return ;    
+      }
     }
   }
 }
@@ -266,7 +243,6 @@ void * handle(void * info) {
   //post
   else if (request.method=="POST"){
     std::cout<<"post"<<std::endl;
-    //todo
     if(httpPost(client_fd, server_fd,request)==-1){return NULL;}
   }
   //get
@@ -344,7 +320,7 @@ void * handle(void * info) {
 
       }
       //public
-      else if(!response.needRevalidate && !response.needCheckTime){//todo: change to if public 
+      else if(!response.needRevalidate && !response.needCheckTime){ 
         if(send_client_cache_directly(client_fd,request)==-1){return NULL;}
       }
       else{return NULL;}
