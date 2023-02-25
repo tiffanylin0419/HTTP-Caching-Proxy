@@ -73,6 +73,9 @@ class Date {
   void print(){
     std::cout << asctime(&time);
   }
+  std::string toPrintString(){
+    return asctime(&time);
+  }
 
   //to HTTP form string , ex. Tue, 15 Nov 2022 08:12:31 GMT
   std::string toString(){
