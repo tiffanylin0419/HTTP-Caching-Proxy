@@ -1,6 +1,5 @@
 #include "proxy.h"
 #include "client_info.h"
-#include "proxy_function.h"
 #include "function.h"
 #include "request.h"
 #include "response.h"

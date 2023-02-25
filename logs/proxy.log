@@ -1,0 +1,37 @@
+0: "CONNECT www.youtube.com:443 HTTP/1.1" from  @ Sat Feb 25 20:18:43 2023
+0: Requesting "CONNECT www.youtube.com:443 HTTP/1.1" from www.youtube.com
+0: Responding "HTTP/1.1 200 OK"
+1: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Sat Feb 25 20:18:43 2023
+1: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+1: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+2: "CONNECT i.ytimg.com:443 HTTP/1.1" from  @ Sat Feb 25 20:18:45 2023
+2: Requesting "CONNECT i.ytimg.com:443 HTTP/1.1" from i.ytimg.com
+2: Responding "HTTP/1.1 200 OK"
+4: "CONNECT googleads.g.doubleclick.net:443 HTTP/1.1" from  @ Sat Feb 25 20:18:46 2023
+4: Requesting "CONNECT googleads.g.doubleclick.net:443 HTTP/1.1" from googleads.g.doubleclick.net
+4: Responding "HTTP/1.1 200 OK"
+5: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Sat Feb 25 20:18:46 2023
+5: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+5: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+8: "CONNECT www.google.com:443 HTTP/1.1" from  @ Sat Feb 25 20:18:46 2023
+8: Requesting "CONNECT www.google.com:443 HTTP/1.1" from www.google.com
+8: Responding "HTTP/1.1 200 OK"
+6: "CONNECT fonts.gstatic.com:443 HTTP/1.1" from  @ Sat Feb 25 20:18:46 2023
+6: Requesting "CONNECT fonts.gstatic.com:443 HTTP/1.1" from fonts.gstatic.com
+6: Responding "HTTP/1.1 200 OK"
+6: ERROR recv server!
+6: Tunnel closed
+9: "CONNECT yt3.ggpht.com:443 HTTP/1.1" from  @ Sat Feb 25 20:18:46 2023
+9: Requesting "CONNECT yt3.ggpht.com:443 HTTP/1.1" from yt3.ggpht.com
+9: Responding "HTTP/1.1 200 OK"
+10: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Sat Feb 25 20:18:47 2023
+10: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+10: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+11: "CONNECT safebrowsing.googleapis.com:443 HTTP/1.1" from  @ Sat Feb 25 20:18:47 2023
+12: "CONNECT www.gstatic.com:443 HTTP/1.1" from  @ Sat Feb 25 20:18:47 2023
+11: Requesting "CONNECT safebrowsing.googleapis.com:443 HTTP/1.1" from safebrowsing.googleapis.com
+11: Responding "HTTP/1.1 200 OK"
+12: Requesting "CONNECT www.gstatic.com:443 HTTP/1.1" from www.gstatic.com
+12: Responding "HTTP/1.1 200 OK"
+11: ERROR recv server!
+11: Tunnel closed

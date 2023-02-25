@@ -31,3 +31,5 @@ process max-stale in request
 Request parse line with “\r”, response parse line with “\n”
 
 use MSG_NOSIGNAL for all send function so that the program will keep running when error
+
+Exception: strong exception guarantee, because if exception, no side effects will be visible becuase we used MSG_NOSIGNAL on send

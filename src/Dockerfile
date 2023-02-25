@@ -7,4 +7,3 @@ RUN mkdir /code
 ADD . /code
 WORKDIR /code
 RUN ["chmod", "+x", "run.sh"]
-
