@@ -445,7 +445,6 @@ void * handle(void * info) {
       }
       
       Response response = Response(server_response);
-      response.print();
       //add a lot
       pthread_mutex_lock(&mutex1);		      std::cout<<"\n\n"<<response.input<<"\n";
       logFile << client_info->getID() << ": " << "Received \"" << response.line << "\" from " << request.host << std::endl;		
