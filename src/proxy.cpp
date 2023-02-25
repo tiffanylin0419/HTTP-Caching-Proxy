@@ -11,8 +11,22 @@ pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 
 std::map<std::string, Response> cache;
 
+int check502(int client_fd, char buffer[], ssize_t len){
+  std::string str(buffer);
+  //valid
+  if(str.find("Content-Type:") != std::string::npos){
+    return 0;
+  }
+  //invalid
+  else{
+    error502(client_fd);
+    return -1;
+  }
+}
+
 
 int send_client_cache_directly(int client_fd, Request request){
+  std::cout<<"\n\ngot cache\n\n";
   std::string str=cache[request.line].input;
   char server_response[BUFFER_LEN] = {0};
   str.copy(server_response, str.size() + 1);
@@ -57,26 +71,32 @@ std::string request_directly(int client_fd, int server_fd,Request request){
     return "";
   }*/
 
-  std::string returnStr="";
+  bool isChunk=false;
   //todo
   //post會壞掉
   while (true) {  //use while loop for processing chunk data		
     ssize_t bytes_received = recv(server_fd, buffer2, sizeof(buffer2), 0);		
     if (bytes_received<=0){		
       std::cerr << "Error: send! client! or chunck end" << std::endl;		
-      return returnStr;		
+      break;		
     }		
 
+    /*if(check502(client_fd,buffer2, bytes_received)==-1){
+      return "";
+    }*/
+
     std::string buffer2_ss(buffer2);
-    if(buffer2_ss.find("chunk") != std::string::npos){returnStr="chunk";}
+    if(buffer2_ss.find("chunked") != std::string::npos){isChunk=true;}
 
     ssize_t send_client = send(client_fd, buffer2, bytes_received , MSG_NOSIGNAL); 		
     if (send_client<0){		
       std::cerr << "Error: send! client!" << std::endl;		
-      return returnStr;		
+      return "";		
     }		
   }
-
+  if(isChunk){
+    return "chunk";
+  }
 
   std::string buffer2_s(buffer2);
   return buffer2_s;
@@ -100,10 +120,6 @@ std::string request_directly_post(int client_fd, int server_fd,Request request){
     std::cerr << "Error: recv! server!" << std::endl;
     return "";
   }
-  std::string buffer2_ss(buffer2);
-  bool chunk=false;
-  if(buffer2_ss.find("chunk") != std::string::npos){chunk=true;}
-  std::cout<<buffer2_ss<<"\n";//?
   ssize_t send_client = send(client_fd, buffer2, bytes_received , MSG_NOSIGNAL); 
   if (send_client<0){
     std::cerr << "Error: send! client!" << std::endl;
@@ -144,6 +160,9 @@ int revalidate(int server_fd,int client_fd, Request request, Response response){
     std::cerr << "Error: recv server!" << std::endl;
     return -1;
   }
+  /*if(check502(client_fd,buffer, bytes_received)==-1){
+    return -1;
+  }*/
   std::string http_response(buffer, BUFFER_LEN);
   Response response_new=Response(http_response);
   std::string status_code = response_new.statusCode;
@@ -253,23 +272,26 @@ void * handle(void * info) {
   //get
   else if (request.method=="GET"){
     std::cout<<"get"<<std::endl;
-    if(httpPost(client_fd, server_fd,request)==-1){return NULL;}
+    //cache size control
+    while(cache.size()>100){
+      cache.erase(cache.begin());
+    }
     //地一行不在cache裡
     if (cache.count(request.line) == 0){
       //DRY
       std::string server_response = request_directly(client_fd, server_fd,request);
-      if(server_response==""){
+      if(server_response==""||server_response=="chunk"){
         return NULL;
       }
-      if(server_response!="chunk"){//?
-        Response response = Response(server_response);
-        std::cout<<"\n\n"<<response.input<<"\n";
+      
+      Response response = Response(server_response);
+      std::cout<<"\n\n"<<response.input<<"\n";
 
-        if(response.canCache){
-          std::cout<<response.input;
-          if(response.statusCode=="200"){cache[request.line] = response;}
-        }
+      if(response.canCache){
+        std::cout<<response.input;
+        if(response.statusCode=="200"){cache[request.line] = response;}
       }
+      
     }
     //地一行在cache裡
     else{
@@ -323,7 +345,6 @@ void * handle(void * info) {
       }
       //public
       else if(!response.needRevalidate && !response.needCheckTime){//todo: change to if public 
-        std::cout<<"\n\ncache suceed\n\n";
         if(send_client_cache_directly(client_fd,request)==-1){return NULL;}
       }
       else{return NULL;}
@@ -332,8 +353,7 @@ void * handle(void * info) {
   }
   //none
   else {
-    //todo: 
-    //send client 400 error
+    error400(client_fd);
     return NULL;
   }
   close(server_fd);

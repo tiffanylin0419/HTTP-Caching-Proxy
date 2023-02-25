@@ -28,3 +28,4 @@ Only caches when response is 200 ok
 
 process max-stale in request
 
+Request parse line with “\r”, response parse line with “\n”

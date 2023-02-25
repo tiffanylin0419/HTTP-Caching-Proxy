@@ -9,5 +9,7 @@
 #include <map>
 #include <iomanip>
 #include <iterator>
+#include <fstream>
+#include <pthread.h>
 
 #define BUFFER_LEN 50000

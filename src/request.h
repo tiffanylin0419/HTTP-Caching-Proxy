@@ -25,8 +25,7 @@ class Request {
   void Parse() {
     //line
     std::stringstream ssLine(input);
-    size_t pos = input.find_first_of("\r\n");
-    line = input.substr(0, pos);
+    getline(ssLine, line, '\r');
 
     //method
     std::stringstream ss(input);
@@ -41,7 +40,7 @@ class Request {
         break;
       }
     }
-    pos = 0;
+    size_t pos = 0;
     std::string::size_type prev_pos = 0;
     while ((pos = hostLine.find(':', prev_pos)) != std::string::npos) {
       prev_pos = pos + 1;
