@@ -7,8 +7,45 @@
 #include "error.h"
 
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
 
 std::map<std::string, Response> cache;
+std::ofstream logFile("/var/log/erss/proxy.log");
+
+std::string err502="HTTP/1.1 502 Bad Gateway\r\n\r\n";
+std::string ok200="HTTP/1.1 200 OK\r\n\r\n";
+std::string bad400="HTTP/1.1 400 Bad Request\r\n\r\n";
+
+void error502(int client_fd){
+    /*char server_response[BUFFER_LEN] = {0};
+    err502.copy(server_response, err502.size() + 1);
+    server_response[err502.size()] = '\0';
+    send(client_fd, server_response,err502.size(), 0);*/
+    pthread_mutex_lock(&mutex1);
+    logFile << "Responding \""<<"HTTP/1.1 502 Bad Gateway"<<"\"\n" << std::endl;
+    pthread_mutex_unlock(&mutex1);
+}
+
+void okGood200(int client_fd){
+    char server_response[BUFFER_LEN] = {0};
+    ok200.copy(server_response, ok200.size() + 1);
+    server_response[ok200.size()] = '\0';
+    send(client_fd, server_response,ok200.size(), 0);
+    pthread_mutex_lock(&mutex1);
+    logFile << "Responding \""<<"HTTP/1.1 200 OK"<<"\"\n" << std::endl;
+    pthread_mutex_unlock(&mutex1);
+}
+
+void error400(int client_fd){
+    /*char server_response[BUFFER_LEN] = {0};
+    bad400.copy(server_response, ok200.size() + 1);
+    server_response[bad400.size()] = '\0';
+    send(client_fd, server_response,bad400.size(), 0);*/
+    pthread_mutex_lock(&mutex1);
+    logFile << "Responding \""<<"HTTP/1.1 400 Bad Request"<<"\"\n" << std::endl;
+    pthread_mutex_unlock(&mutex1);
+}
+
 
 int check502(int client_fd, char buffer[], ssize_t len){
   std::string str(buffer);
@@ -24,16 +61,24 @@ int check502(int client_fd, char buffer[], ssize_t len){
 }
 
 
-int send_client_cache_directly(int client_fd, Request request){
-  std::cout<<"\n\ngot cache\n\n";
+int send_client_cache_directly(int client_fd, Request request, int client_id){
   std::string str=cache[request.line].input;
   char server_response[BUFFER_LEN] = {0};
   str.copy(server_response, str.size() + 1);
   server_response[str.size()] = '\0';
-  std::cout<<"\n\n\n"<<server_response<<"\n\n\n";
-  ssize_t send_client = send(client_fd, server_response, str.size() , MSG_NOSIGNAL); 
+  
+  ssize_t send_client = send(client_fd, server_response, str.size() , MSG_NOSIGNAL);
+  //add
+  pthread_mutex_lock(&mutex1);		
+  logFile << client_id << ": Responding \"" << cache[request.line].line << "\"";		
+  pthread_mutex_unlock(&mutex1); 
+
   if (send_client<0){
     std::cerr << "Error: send! client!" << std::endl;
+    //add
+    pthread_mutex_lock(&mutex1);		
+    logFile << client_id << ": ERROR send! client!" << std::endl;		
+    pthread_mutex_unlock(&mutex1);
     return -1;
   }
   return 0;
@@ -107,7 +152,7 @@ std::string request_directly_post(int client_fd, int server_fd,Request request){
 }
 
 
-int revalidate(int server_fd,int client_fd, Request request, Response response){
+int revalidate(int server_fd,int client_fd, Request request, Response response, int client_id){
   //check response value, append to request
   std::string str=request.input;
   
@@ -146,7 +191,7 @@ int revalidate(int server_fd,int client_fd, Request request, Response response){
 
   //send to client
   if (status_code == "304" ){//same, 直接返還給客戶
-    if(send_client_cache_directly(client_fd, request)==-1){
+    if(send_client_cache_directly(client_fd, request,client_id)==-1){
       return -1;
     }
   }
@@ -252,6 +297,10 @@ void * handle(void * info) {
     while(cache.size()>100){
       cache.erase(cache.begin());
     }
+    //now time
+    time_t now = std::time(nullptr);
+    std::tm* timeinfo = std::gmtime(&now);
+    Date now_date=Date(*timeinfo);
     //地一行不在cache裡
     if (cache.count(request.line) == 0){
       //DRY
@@ -275,32 +324,26 @@ void * handle(void * info) {
       //no-cache
       if(response.needRevalidate && !response.needCheckTime){
         std::cout<<"\n\nrevalidate suceed\n\n";
-        if(revalidate(server_fd, client_fd, request, response)==-1){return NULL;}
+        if(revalidate(server_fd, client_fd, request, response, client_info->getID())==-1){return NULL;}
       }
       //must-revalidate
       else if(response.needRevalidate && response.needCheckTime){
-        time_t now = std::time(nullptr);
-        std::tm* timeinfo = std::gmtime(&now);
-        Date now_date=Date(*timeinfo);
+        
 
         if((response.max_age_time.isEmpty() && response.expire_time.isEmpty()) ||
-          (! response.max_age_time.isEmpty() && response.max_age_time.isLessThan(now_date))||
-          (! response.expire_time.isEmpty() && response.expire_time.isLessThan(now_date))){//2都沒or任一過期，check
-          if(revalidate(server_fd, client_fd, request, response)==-1){return NULL;}
+          (! response.max_age_time.isEmpty() && response.max_age_time.isLessThan(now_date,request.max_stale))||
+          (! response.expire_time.isEmpty() && response.expire_time.isLessThan(now_date,request.max_stale))){//2都沒or任一過期，check
+          if(revalidate(server_fd, client_fd, request, response, client_info->getID())==-1){return NULL;}
         }
         else {//沒過期,用cache
-          if(send_client_cache_directly(client_fd, request)==-1){return NULL;}
+          if(send_client_cache_directly(client_fd, request,client_info->getID())==-1){return NULL;}
         }
       }
 
       //max-age or expire date
-      else if((!response.needRevalidate && response.needCheckTime)|| !response.expire_time.isEmpty()){
-        time_t now = std::time(nullptr);
-        std::tm* timeinfo = std::gmtime(&now);
-        Date now_date=Date(*timeinfo);
-
-        if((! response.max_age_time.isEmpty() && response.max_age_time.isLessThan(now_date))||
-          (! response.expire_time.isEmpty() && response.expire_time.isLessThan(now_date))){//已經過期，重新要
+      else if((!response.needRevalidate && response.needCheckTime)){
+        if((! response.max_age_time.isEmpty() && response.max_age_time.isLessThan(now_date,request.max_stale))||
+          (! response.expire_time.isEmpty() && response.expire_time.isLessThan(now_date,request.max_stale))){//已經過期，重新要
           //DRY
           std::string server_response = request_directly(client_fd, server_fd,request);		
           if(server_response==""||server_response=="chunk"){		//?
@@ -312,16 +355,15 @@ void * handle(void * info) {
             std::cout<<response.input;		
             if(response.statusCode=="200"){cache[request.line] = response;}
           }		
-        
         }
         else {//沒過期,用cache
-          if(send_client_cache_directly(client_fd, request)==-1){return NULL;}
+          if(send_client_cache_directly(client_fd, request,client_info->getID())==-1){return NULL;}
         }
 
       }
       //public
       else if(!response.needRevalidate && !response.needCheckTime){ 
-        if(send_client_cache_directly(client_fd,request)==-1){return NULL;}
+        if(send_client_cache_directly(client_fd,request,client_info->getID())==-1){return NULL;}
       }
       else{return NULL;}
     }
@@ -352,13 +394,13 @@ void proxy::run() {
       continue;
     }
     pthread_t thread;
-    pthread_mutex_lock(&mutex1);
+    pthread_mutex_lock(&mutex2);
     Client_Info * client_info = new Client_Info();
     client_info->setFd(client_fd);
     client_info->setIP(ip);
     client_info->setID(id);
     id++;
-    pthread_mutex_unlock(&mutex1);
+    pthread_mutex_unlock(&mutex2);
     pthread_create(&thread, NULL, handle, client_info);
   }
   close(temp_fd);

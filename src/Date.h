@@ -107,12 +107,18 @@ class Date {
 
 
   //compare time
-  bool isLessThan(Date d2){
-    std::tm t1=time;
-    std::tm t2=d2.getTime();
+  //expire.isLessThan(now)
+  bool isLessThan(Date d2, int stale){
+    std::tm t1=time;//expire
+
+    std::tm t2=d2.getTime();//now
+    std::time_t time_as_time_t = std::mktime(&t2);
+    time_as_time_t -= stale;
+    std::tm t3 = *localtime(&time_as_time_t);//now-stale
+
     std::time_t time1 = std::mktime(&t1);
-    std::time_t time2 = std::mktime(&t2);
-    return time1 < time2;
+    std::time_t time3 = std::mktime(&t3);
+    return time1 < time3;
   }
 
   //renew used on max_age-date
