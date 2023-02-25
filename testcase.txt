@@ -252,18 +252,33 @@ http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx
 
 
 
-
 --------------------------------------------
-max-age=0
-https://run.mocky.io/v3/2ad90ba3-5a53-4b3e-bf9b-8b12d542b8d1
---------------------------------------------
-
-
-
-
-
---------------------------------------------
-
+POST
+0: "CONNECT contile-images.services.mozilla.com:443 HTTP/1.1" from  @ Sat Feb 25 22:49:37 2023
+0: Requesting "CONNECT contile-images.services.mozilla.com:443 HTTP/1.1" from contile-images.services.mozilla.com
+0: Responding "HTTP/1.1 200 OK"
+1: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  @ Sat Feb 25 22:49:37 2023
+1: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
+1: Responding "HTTP/1.1 200 OK"
+2: "CONNECT img-getpocket.cdn.mozilla.net:443 HTTP/1.1" from  @ Sat Feb 25 22:49:37 2023
+2: Requesting "CONNECT img-getpocket.cdn.mozilla.net:443 HTTP/1.1" from img-getpocket.cdn.mozilla.net
+2: Responding "HTTP/1.1 200 OK"
+3: "POST http://ocsp.digicert.com/ HTTP/1.1" from  @ Sat Feb 25 22:49:38 2023
+3: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+3: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+4: "POST http://r3.o.lencr.org/ HTTP/1.1" from  @ Sat Feb 25 22:49:38 2023
+4: Requesting "POST http://r3.o.lencr.org/ HTTP/1.1" from r3.o.lencr.org
+4: Requesting "POST http://r3.o.lencr.org/ HTTP/1.1" from r3.o.lencr.org
+5: "GET http://httpbin.org/forms/post HTTP/1.1" from  @ Sat Feb 25 22:49:44 2023
+5: not in cache
+5: Requesting "GET http://httpbin.org/forms/post HTTP/1.1" from httpbin.org
+5: Responding "HTTP/1.1 200 OK"
+6: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  @ Sat Feb 25 22:49:44 2023
+6: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
+6: Responding "HTTP/1.1 200 OK"
+7: "POST http://ocsp.digicert.com/ HTTP/1.1" from  @ Sat Feb 25 22:49:44 2023
+7: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+7: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
 --------------------------------------------
 
 
