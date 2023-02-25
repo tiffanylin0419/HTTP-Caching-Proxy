@@ -22,17 +22,17 @@ void error502(int client_fd){
     server_response[err502.size()] = '\0';
     send(client_fd, server_response,err502.size(), 0);*/
     pthread_mutex_lock(&mutex1);
-    logFile << "Responding \""<<"HTTP/1.1 502 Bad Gateway"<<"\"\n" << std::endl;
+    logFile << "Responding \""<<"HTTP/1.1 502 Bad Gateway"<<"\"\n";
     pthread_mutex_unlock(&mutex1);
 }
 
-void okGood200(int client_fd){
+void okGood200(int client_fd, int client_id){
     char server_response[BUFFER_LEN] = {0};
     ok200.copy(server_response, ok200.size() + 1);
     server_response[ok200.size()] = '\0';
     send(client_fd, server_response,ok200.size(), 0);
     pthread_mutex_lock(&mutex1);
-    logFile << "Responding \""<<"HTTP/1.1 200 OK"<<"\"\n" << std::endl;
+    logFile << client_id << ": Responding \"" << "HTTP/1.1 200 OK" << "\"" << std::endl;
     pthread_mutex_unlock(&mutex1);
 }
 
@@ -42,7 +42,7 @@ void error400(int client_fd){
     server_response[bad400.size()] = '\0';
     send(client_fd, server_response,bad400.size(), 0);*/
     pthread_mutex_lock(&mutex1);
-    logFile << "Responding \""<<"HTTP/1.1 400 Bad Request"<<"\"\n" << std::endl;
+    logFile << "Responding \""<<"HTTP/1.1 400 Bad Request"<<"\"\n" ;
     pthread_mutex_unlock(&mutex1);
 }
 
@@ -84,25 +84,50 @@ int send_client_cache_directly(int client_fd, Request request, int client_id){
   return 0;
 }
 
-std::string request_directly(int client_fd, int server_fd,Request request){
+std::string request_directly(int client_fd, int server_fd,Request request, int client_id){
   std::string str=request.input;
   char buffer1[BUFFER_LEN] = {0};
   str.copy(buffer1, str.size() + 1);
   buffer1[str.size()] = '\0';
 
+  //add
+  pthread_mutex_lock(&mutex1);		
+  logFile << client_id << ": " << "Requesting \"" << request.line << "\" from " << request.host << std::endl;		
+  pthread_mutex_unlock(&mutex1);
+
   ssize_t server_send = send(server_fd, buffer1, str.size(), MSG_NOSIGNAL); 
   if (server_send<0){
     std::cerr << "Error: send! server!" << std::endl;
+    //add
+    pthread_mutex_lock(&mutex1);		
+    logFile << client_id << ": ERROR send! server!"  << std::endl;		
+    pthread_mutex_unlock(&mutex1);
     return "";
   }
   char buffer2[BUFFER_LEN] = {0};
   bool isChunk=false;
+  bool isFirst=true;
   while (true) {  //use while loop for processing chunk data		
     ssize_t bytes_received = recv(server_fd, buffer2, sizeof(buffer2), 0);		
     if (bytes_received<=0){		
-      std::cerr << "Error: send! client! or chunck end" << std::endl;		
+      std::cerr << "Error: send! client! or chunck end" << std::endl;	
+      //add
+      pthread_mutex_lock(&mutex1);
+      logFile << client_id << ": ERROR recv! server!"  << std::endl;
+      pthread_mutex_unlock(&mutex1);	
+
       break;		
     }		
+    //add a lot
+    if(isFirst){
+      std::string input(buffer2);
+      std::stringstream ssLine(input);
+      std::string line;		
+      getline(ssLine, line, '\r');
+      pthread_mutex_lock(&mutex1);		
+      logFile << client_id << ": Responding \"" << line << "\"" << std::endl;		
+      pthread_mutex_unlock(&mutex1);
+    }
 
     /*if(check502(client_fd,buffer2, bytes_received)==-1){
       return "";
@@ -113,8 +138,13 @@ std::string request_directly(int client_fd, int server_fd,Request request){
     ssize_t send_client = send(client_fd, buffer2, bytes_received , MSG_NOSIGNAL); 		
     if (send_client<0){		
       std::cerr << "Error: send! client!" << std::endl;		
+      //add
+      pthread_mutex_lock(&mutex1);		
+      logFile << client_id << ": ERROR send! client!" << std::endl;		
+      pthread_mutex_unlock(&mutex1);
       return "";		
     }		
+    isFirst=false;
   }
   if(isChunk){
     return "chunk";
@@ -125,27 +155,56 @@ std::string request_directly(int client_fd, int server_fd,Request request){
 }
 
 
-std::string request_directly_post(int client_fd, int server_fd,Request request){
+std::string request_directly_post(int client_fd, int server_fd,Request request, int client_id){
   std::string str=request.input;
   char buffer1[BUFFER_LEN] = {0};
   str.copy(buffer1, str.size() + 1);
   buffer1[str.size()] = '\0';
 
+  //add
+  pthread_mutex_lock(&mutex1);		
+  logFile << client_id << ": " << "Requesting \"" << request.line << "\" from " << request.host << std::endl;		
+  pthread_mutex_unlock(&mutex1);
+
   ssize_t server_send = send(server_fd, buffer1, str.size(), MSG_NOSIGNAL); 
   if (server_send<0){
     std::cerr << "Error: send! server!" << std::endl;
+    //add
+    pthread_mutex_lock(&mutex1);		
+    logFile << client_id << ": ERROR send! server!"  << std::endl;		
+    pthread_mutex_unlock(&mutex1);
     return "";
   }
   char buffer2[BUFFER_LEN] = {0};
   ssize_t bytes_received  = recv(server_fd, buffer2, sizeof(buffer2), 0);
   if (bytes_received <0){
     std::cerr << "Error: recv! server!" << std::endl;
+    //add
+    pthread_mutex_lock(&mutex1);		
+    logFile << client_id << ": ERROR recv! server!"  << std::endl;		
+    pthread_mutex_unlock(&mutex1);
     return "";
   }
+
+  //add a lot
+  std::string input(buffer2); 		
+  std::stringstream ssLine(input);		
+  std::string line;		
+  getline(ssLine, line, '\r');		
+  pthread_mutex_lock(&mutex1);		
+  logFile << client_id << ": Responding \"" << line << "\"" << std::endl;		
+  pthread_mutex_unlock(&mutex1);
+
+
   ssize_t send_client = send(client_fd, buffer2, bytes_received , MSG_NOSIGNAL); 
   if (send_client<0){
     std::cerr << "Error: send! client!" << std::endl;
+    //add
+    pthread_mutex_lock(&mutex1);		
+    logFile << client_id << ": ERROR send! client!" << std::endl;		
+    pthread_mutex_unlock(&mutex1);
     return "";
+    
   }
   std::string buffer2_s(buffer2);
   return buffer2_s;
@@ -159,10 +218,18 @@ int revalidate(int server_fd,int client_fd, Request request, Response response, 
   if (response.etag != "") {
     std::string ifNoneMatch = "If-None-Match: " + response.etag + "\r\n";
     str = str + ifNoneMatch;
+    //add
+    pthread_mutex_lock(&mutex1);		
+    logFile << client_id << ": NOTE ETag: " << response.etag <<"\r\n"<<std::endl;		
+    pthread_mutex_unlock(&mutex1);
   }
   if (!response.last_modified_time.isEmpty()){
     std::string ifModifiedSince = "If-Modified-Since: " + response.last_modified_time.toString() + "\r\n";
     str = str + ifModifiedSince;
+    //add
+    pthread_mutex_lock(&mutex1);		
+    logFile << client_id << ": NOTE If-Modified-Since: " << response.last_modified_time.toString() <<"\r\n"<<std::endl;		
+    pthread_mutex_unlock(&mutex1);
   }
   //std::cout<<"\n\nmy response: \n\n"<<str<<"\n\n";
   char request_new[BUFFER_LEN] = {0};
@@ -173,6 +240,10 @@ int revalidate(int server_fd,int client_fd, Request request, Response response, 
   ssize_t server_send = send(server_fd, request_new, sizeof(request_new), MSG_NOSIGNAL); 
   if (server_send<0){
     std::cerr << "Error: send! server!" << std::endl;
+    //add
+    pthread_mutex_lock(&mutex1);		
+    logFile << client_id << ": ERROR send! server!" << std::endl;;		
+    pthread_mutex_unlock(&mutex1);
     return -1;
   }
   //recv from server
@@ -180,6 +251,10 @@ int revalidate(int server_fd,int client_fd, Request request, Response response, 
   ssize_t bytes_received  = recv(server_fd, buffer, sizeof(buffer), 0);
   if (bytes_received <0){
     std::cerr << "Error: recv server!" << std::endl;
+    //add
+    pthread_mutex_lock(&mutex1);		
+    logFile << client_id << ": ERROR recv server!" << std::endl;;		
+    pthread_mutex_unlock(&mutex1);
     return -1;
   }
   /*if(check502(client_fd,buffer, bytes_received)==-1){
@@ -191,17 +266,34 @@ int revalidate(int server_fd,int client_fd, Request request, Response response, 
 
   //send to client
   if (status_code == "304" ){//same, 直接返還給客戶
+    //add
+    pthread_mutex_lock(&mutex1);		
+    logFile << client_id << ": Responding \"" << request.line << "\"" << std::endl;		
+    pthread_mutex_unlock(&mutex1);
     if(send_client_cache_directly(client_fd, request,client_id)==-1){
       return -1;
     }
+    //add
+    pthread_mutex_lock(&mutex1);		
+    logFile << client_id << ": Responding \"" << request.line << "\"" << std::endl;		
+    pthread_mutex_unlock(&mutex1);
   }
   else{//change, 更新map
     ssize_t send_client =send(client_fd, buffer,bytes_received, MSG_NOSIGNAL);
+    
     if (send_client<0){
       std::cerr << "Error: send! client!" << std::endl;
+      //add
+      pthread_mutex_lock(&mutex1);		
+      logFile << client_id << ": ERROR recv server!" << std::endl;;		
+      pthread_mutex_unlock(&mutex1);
       return -1;
     }
-    
+    //add
+    pthread_mutex_lock(&mutex1);		
+    logFile << client_id << ": Responding \"" << response.line << "\""<< std::endl;		
+    pthread_mutex_unlock(&mutex1);
+
     if(response_new.canCache){
       if(response_new.statusCode=="200"){cache[request.line] = response_new;}
     }
@@ -209,8 +301,8 @@ int revalidate(int server_fd,int client_fd, Request request, Response response, 
   return 0;
 }
 
-void httpConnect(int client_fd, int server_fd){
-  okGood200(client_fd);
+void httpConnect(int client_fd, int server_fd, int client_id){
+  okGood200(client_fd,client_id);
   fd_set readfds;
   int nfds = max(server_fd , client_fd)+1;
 
@@ -227,11 +319,18 @@ void httpConnect(int client_fd, int server_fd){
       char buffer1[BUFFER_LEN] = {0};//add
       ssize_t bytes_received = recv(server_fd, buffer1, sizeof(buffer1), 0);
       if (bytes_received <= 0) {
+        //add
+        pthread_mutex_lock(&mutex1);		
+        logFile << client_id << ": ERROR recv server!" << std::endl;;		
+        pthread_mutex_unlock(&mutex1);
         return;
       }
       buffer1[bytes_received]='\0';
       if(send(client_fd, buffer1,bytes_received, MSG_NOSIGNAL)<0){
         std::cerr << "Error: send! client!" << std::endl;   
+        pthread_mutex_lock(&mutex1);		
+        logFile << client_id << ": ERROR send! client!" << std::endl;		
+        pthread_mutex_unlock(&mutex1);
         return ;    
       }
     }
@@ -240,11 +339,18 @@ void httpConnect(int client_fd, int server_fd){
       char buffer2[BUFFER_LEN] = {0};//add
       ssize_t bytes_received = recv(client_fd, buffer2, sizeof(buffer2), 0);
       if (bytes_received <= 0) {
+        //add
+        pthread_mutex_lock(&mutex1);		
+        logFile << client_id << ": ERROR recv server!" << std::endl;;		
+        pthread_mutex_unlock(&mutex1);
         return;
       }
       buffer2[bytes_received]='\0';
       if(send(server_fd, buffer2,bytes_received, MSG_NOSIGNAL)<0){
         std::cerr << "Error: send! client!" << std::endl;   
+        pthread_mutex_lock(&mutex1);		
+        logFile << client_id << ": ERROR send! client!" << std::endl;		
+        pthread_mutex_unlock(&mutex1);
         return ;    
       }
     }
@@ -253,8 +359,8 @@ void httpConnect(int client_fd, int server_fd){
 
 
 
-int httpPost(int client_fd, int server_fd,Request request){
-  std::string server_response =request_directly_post (client_fd, server_fd, request);
+int httpPost(int client_fd, int server_fd,Request request, int client_id){
+  std::string server_response =request_directly_post (client_fd, server_fd, request,client_id);
   if(server_response==""){
     return -1;
   }
@@ -283,12 +389,12 @@ void * handle(void * info) {
   //connect
   if (request.method=="CONNECT"){
     std::cout<<"connect"<<std::endl;
-    httpConnect(client_fd, server_fd);
+    httpConnect(client_fd, server_fd,client_info->getID());
   }
   //post
   else if (request.method=="POST"){
     std::cout<<"post"<<std::endl;
-    if(httpPost(client_fd, server_fd,request)==-1){return NULL;}
+    if(httpPost(client_fd, server_fd,request, client_info->getID())==-1){return NULL;}
   }
   //get
   else if (request.method=="GET"){
@@ -304,7 +410,7 @@ void * handle(void * info) {
     //地一行不在cache裡
     if (cache.count(request.line) == 0){
       //DRY
-      std::string server_response = request_directly(client_fd, server_fd,request);
+      std::string server_response = request_directly(client_fd, server_fd,request,client_info->getID());
       if(server_response==""||server_response=="chunk"){
         return NULL;
       }
@@ -345,7 +451,7 @@ void * handle(void * info) {
         if((! response.max_age_time.isEmpty() && response.max_age_time.isLessThan(now_date,request.max_stale))||
           (! response.expire_time.isEmpty() && response.expire_time.isLessThan(now_date,request.max_stale))){//已經過期，重新要
           //DRY
-          std::string server_response = request_directly(client_fd, server_fd,request);		
+          std::string server_response = request_directly(client_fd, server_fd,request,client_info->getID());		
           if(server_response==""||server_response=="chunk"){		//?
             return NULL;
           }		

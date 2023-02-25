@@ -1,30 +1,11 @@
-Responding "HTTP/1.1 200 OK"
-
-Responding "HTTP/1.1 200 OK"
-
-Responding "HTTP/1.1 200 OK"
-
-Responding "HTTP/1.1 200 OK"
-
-Responding "HTTP/1.1 200 OK"
-
-Responding "HTTP/1.1 200 OK"
-
-Responding "HTTP/1.1 200 OK"
-
-Responding "HTTP/1.1 200 OK"
-
-Responding "HTTP/1.1 200 OK"
-
-Responding "HTTP/1.1 200 OK"
-
-Responding "HTTP/1.1 200 OK"
-
-Responding "HTTP/1.1 200 OK"
-
-Responding "HTTP/1.1 200 OK"
-
-Responding "HTTP/1.1 200 OK"
-
-Responding "HTTP/1.1 200 OK"
-
+0: Requesting "GET http://httpbin.org/forms/post HTTP/1.1" from httpbin.org
+0: Responding "HTTP/1.1 200 OK"
+2: Responding "HTTP/1.1 200 OK"
+3: Responding "HTTP/1.1 200 OK"
+4: Responding "HTTP/1.1 200 OK"
+5: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+6: Requesting "POST http://r3.o.lencr.org/ HTTP/1.1" from r3.o.lencr.org
+7: Requesting "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from www.httpwatch.com
+7: Responding "HTTP/1.1 200 OK"
+8: Responding "HTTP/1.1 200 OK"
+9: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
