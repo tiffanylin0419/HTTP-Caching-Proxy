@@ -1,38 +1,23 @@
 #include "proxy.h"
-
-#include <pthread.h>
-
 #include "client_info.h"
-
 #include "proxy_function.h"
-
 #include "function.h"
 #include "request.h"
 #include "response.h"
 #include "error.h"
 
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
+#define RESPONSE_LEN 20
 
 std::map<std::string, Response> cache;
 
-int check502(int client_fd, char buffer[], ssize_t len){
-  std::string str(buffer);
-  //valid
-  if(str.find("Content-Type:") != std::string::npos){
-    return 0;
-  }
-  //invalid
-  else{
-    error502(client_fd);
-    return -1;
-  }
-}
 
 int send_client_cache_directly(int client_fd, Request request){
   std::string str=cache[request.line].input;
   char server_response[BUFFER_LEN] = {0};
   str.copy(server_response, str.size() + 1);
   server_response[str.size()] = '\0';
+  std::cout<<"\n\n\n"<<server_response<<"\n\n\n";
   ssize_t send_client = send(client_fd, server_response, str.size() , MSG_NOSIGNAL); 
   if (send_client<0){
     std::cerr << "Error: send! client!" << std::endl;
@@ -42,8 +27,9 @@ int send_client_cache_directly(int client_fd, Request request){
 }
 
 //todo
-//
+// now will never cache
 //like post but return the http response
+
 std::string request_directly(int client_fd, int server_fd,Request request){
   std::string str=request.input;
   char buffer1[BUFFER_LEN] = {0};
@@ -55,43 +41,78 @@ std::string request_directly(int client_fd, int server_fd,Request request){
     std::cerr << "Error: send! server!" << std::endl;
     return "";
   }
-
   char buffer2[BUFFER_LEN] = {0};
-  ssize_t bytes_received = recv(server_fd, buffer2, sizeof(buffer2), 0);
-  if (bytes_received<=0){
+  /*ssize_t bytes_received  = recv(server_fd, buffer2, sizeof(buffer2), 0);
+  if (bytes_received <0){
     std::cerr << "Error: recv! server!" << std::endl;
     return "";
   }
-  buffer2[bytes_received]='\0';
-  if(check502(client_fd,buffer2, bytes_received)==-1){
-    return "";
-  }
-  
   std::string buffer2_ss(buffer2);
   bool chunk=false;
   if(buffer2_ss.find("chunk") != std::string::npos){chunk=true;}
+  std::cout<<buffer2_ss<<"\n";//?
+  ssize_t send_client = send(client_fd, buffer2, bytes_received , MSG_NOSIGNAL); 
+  if (send_client<0){
+    std::cerr << "Error: send! client!" << std::endl;
+    return "";
+  }*/
+
+  std::string returnStr="";
+  //todo
+  //post會壞掉
+  while (true) {  //use while loop for processing chunk data		
+    ssize_t bytes_received = recv(server_fd, buffer2, sizeof(buffer2), 0);		
+    if (bytes_received<=0){		
+      std::cerr << "Error: send! client! or chunck end" << std::endl;		
+      return returnStr;		
+    }		
+
+    std::string buffer2_ss(buffer2);
+    if(buffer2_ss.find("chunk") != std::string::npos){returnStr="chunk";}
+
+    ssize_t send_client = send(client_fd, buffer2, bytes_received , MSG_NOSIGNAL); 		
+    if (send_client<0){		
+      std::cerr << "Error: send! client!" << std::endl;		
+      return returnStr;		
+    }		
+  }
+
+
+  std::string buffer2_s(buffer2);
+  return buffer2_s;
+}
+
+
+std::string request_directly_post(int client_fd, int server_fd,Request request){
+  std::string str=request.input;
+  char buffer1[BUFFER_LEN] = {0};
+  str.copy(buffer1, str.size() + 1);
+  buffer1[str.size()] = '\0';
+
+  ssize_t server_send = send(server_fd, buffer1, str.size(), MSG_NOSIGNAL); 
+  if (server_send<0){
+    std::cerr << "Error: send! server!" << std::endl;
+    return "";
+  }
+  char buffer2[BUFFER_LEN] = {0};
+  ssize_t bytes_received  = recv(server_fd, buffer2, sizeof(buffer2), 0);
+  if (bytes_received <0){
+    std::cerr << "Error: recv! server!" << std::endl;
+    return "";
+  }
+  std::string buffer2_ss(buffer2);
+  bool chunk=false;
+  if(buffer2_ss.find("chunk") != std::string::npos){chunk=true;}
+  std::cout<<buffer2_ss<<"\n";//?
   ssize_t send_client = send(client_fd, buffer2, bytes_received , MSG_NOSIGNAL); 
   if (send_client<0){
     std::cerr << "Error: send! client!" << std::endl;
     return "";
   }
-  //
-  while (chunk) {  //use while loop for processing chunk data
-    bytes_received = recv(server_fd, buffer2, sizeof(buffer2), 0);
-    if (bytes_received<=0){
-      std::cerr << "Chunck End" << std::endl;
-      return "";
-    }
-    buffer2[bytes_received]='\0';
-    send_client = send(client_fd, buffer2, bytes_received , MSG_NOSIGNAL); 
-    if (send_client<0){
-      std::cerr << "Error: send! client!" << std::endl;
-      return "";
-    }
-  }
   std::string buffer2_s(buffer2);
   return buffer2_s;
 }
+
 
 int revalidate(int server_fd,int client_fd, Request request, Response response){
   //check response value, append to request
@@ -123,10 +144,6 @@ int revalidate(int server_fd,int client_fd, Request request, Response response){
     std::cerr << "Error: recv server!" << std::endl;
     return -1;
   }
-  buffer[bytes_received]='\0';
-  if(check502(client_fd,buffer, bytes_received)==-1){
-    return -1;
-  }
   std::string http_response(buffer, BUFFER_LEN);
   Response response_new=Response(http_response);
   std::string status_code = response_new.statusCode;
@@ -138,6 +155,8 @@ int revalidate(int server_fd,int client_fd, Request request, Response response){
     }
   }
   else{//change, 更新map
+
+
     ssize_t send_client =send(client_fd, buffer,bytes_received, 0);
     if (send_client<0){
       std::cerr << "Error: send! client!" << std::endl;
@@ -145,11 +164,14 @@ int revalidate(int server_fd,int client_fd, Request request, Response response){
     }
     
     if(response_new.canCache){
-      cache[request.line] = response_new;
+      if(response_new.statusCode=="200"){cache[request.line] = response_new;}
     }
   }
   return 0;
 }
+
+
+
 
 //todo: check recv,send return value
 void httpConnect(int client_fd, int server_fd){
@@ -173,8 +195,7 @@ void httpConnect(int client_fd, int server_fd){
         return;
       }
       buffer1[bytes_received]='\0';
-      
-      send(client_fd, buffer1,bytes_received, 0);
+      send(client_fd, buffer1,bytes_received, 0) ;
     }
     
     if (FD_ISSET(client_fd, &readfds)) {
@@ -192,7 +213,7 @@ void httpConnect(int client_fd, int server_fd){
 
 
 int httpPost(int client_fd, int server_fd,Request request){
-  std::string server_response =request_directly (client_fd, server_fd, request);
+  std::string server_response =request_directly_post (client_fd, server_fd, request);
   if(server_response==""){
     return -1;
   }
@@ -232,6 +253,7 @@ void * handle(void * info) {
   //get
   else if (request.method=="GET"){
     std::cout<<"get"<<std::endl;
+    if(httpPost(client_fd, server_fd,request)==-1){return NULL;}
     //地一行不在cache裡
     if (cache.count(request.line) == 0){
       //DRY
@@ -239,15 +261,14 @@ void * handle(void * info) {
       if(server_response==""){
         return NULL;
       }
-      if(server_response!="chunk"){
+      if(server_response!="chunk"){//?
         Response response = Response(server_response);
         std::cout<<"\n\n"<<response.input<<"\n";
 
         if(response.canCache){
           std::cout<<response.input;
-          cache[request.line] = response;
+          if(response.statusCode=="200"){cache[request.line] = response;}
         }
-        
       }
     }
     //地一行在cache裡
@@ -283,35 +304,31 @@ void * handle(void * info) {
         if((! response.max_age_time.isEmpty() && response.max_age_time.isLessThan(now_date))||
           (! response.expire_time.isEmpty() && response.expire_time.isLessThan(now_date))){//已經過期，重新要
           //DRY
-          std::string server_response = request_directly(client_fd, server_fd,request);
-          if(server_response==""){
+          std::string server_response = request_directly(client_fd, server_fd,request);		
+          if(server_response==""||server_response=="chunk"){		//?
             return NULL;
-          }
-          if(server_response!="chunk"){
-            Response response = Response(server_response);
-            std::cout<<"\n\n"<<response.input<<"\n";
-
-            if(response.canCache){
-              std::cout<<response.input;
-              cache[request.line] = response;
-            }
-          }
+          }		
+          Response response = Response(server_response);		
+          std::cout<<"\n\n"<<response.input<<"\n";		
+          if(response.canCache){		
+            std::cout<<response.input;		
+            if(response.statusCode=="200"){cache[request.line] = response;}
+          }		
+        
         }
         else {//沒過期,用cache
           if(send_client_cache_directly(client_fd, request)==-1){return NULL;}
         }
+
       }
       //public
       else if(!response.needRevalidate && !response.needCheckTime){//todo: change to if public 
         std::cout<<"\n\ncache suceed\n\n";
         if(send_client_cache_directly(client_fd,request)==-1){return NULL;}
       }
-      else{
-        std::cerr << "Error: 400" << std::endl;
-        error400(client_fd);
-        return NULL;
-      }
+      else{return NULL;}
     }
+
   }
   //none
   else {
