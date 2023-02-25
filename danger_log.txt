@@ -20,10 +20,16 @@ handle chunked data by using a while loop for receiving data from server and sen
 
 handle unchunked data by parsing the first received response and check if it contains the word "chunk" inside, if it does not, we do not go into the while loop mentioned above
 
-bad response: send 502 to client
-bad request: send 400 to client
+1. bad response(no "Content-Type:"): send 502 to client
+   do not check for connect because it is encoded
+2. bad request(no "CONNECT, GET, POST"): send 400 to client
 
 Only caches when response is 200 ok
 
 process max-stale in request
 
+Request parse line with “\r”, response parse line with “\n”
+
+use MSG_NOSIGNAL for all send function so that the program will keep running when error
+
+Exception: strong exception guarantee, because if exception, no side effects will be visible becuase we used MSG_NOSIGNAL on send

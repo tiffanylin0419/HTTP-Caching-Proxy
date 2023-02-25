@@ -6,7 +6,7 @@
 #include <iostream>
 
 class Client_Info {
- private:
+ public:
   int id;
   int client_fd;
   //struct sockaddr_storage client_addr;

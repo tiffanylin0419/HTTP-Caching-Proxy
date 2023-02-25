@@ -34,12 +34,12 @@ class Response{
         
         //line
         std::stringstream ssLine(input);
-        getline(ssLine, line, '\n');
+        getline(ssLine, line, '\r');
 
         //date
         std::string tmpLine;
         while (getline(ssLine, tmpLine, '\n')) {
-            std::size_t pos = tmpLine.find(" ");
+            size_t pos = tmpLine.find(" ");
             std::string front=tmpLine.substr(0,pos);
             std::string back=tmpLine.substr(pos+1);
             
