@@ -1,4 +1,4 @@
-#include "function.h"
+#include "connect_func.h"
 
 #include <arpa/inet.h>
 #include <netdb.h>
@@ -11,14 +11,18 @@
 
 using namespace std;
 
-int build_server(const char * port) {
-  const char * hostname = NULL;
-  struct addrinfo host_info;
-  struct addrinfo * host_info_list;
+int setup_server(const char * port) {
+
   int status;
   int socket_fd;
+  struct addrinfo host_info;
+  struct addrinfo * host_info_list;
+  const char * hostname = NULL;
+
+
 
   memset(&host_info, 0, sizeof(host_info));
+
   host_info.ai_family = AF_UNSPEC;
   host_info.ai_socktype = SOCK_STREAM;
   host_info.ai_flags = AI_PASSIVE;
@@ -27,22 +31,20 @@ int build_server(const char * port) {
   if (status != 0) {
     cerr << "Error: cannot get address info for host" << endl;
     cerr << "  (" << hostname << "," << port << ")" << endl;
-    //exit(EXIT_FAILURE);
     return -1;
   }
-
+/* 應該可以刪掉
   if (strcmp(port, "") == 0) {
     struct sockaddr_in * addr_in = (struct sockaddr_in *)(host_info_list->ai_addr);
     addr_in->sin_port = 0;
   }
-
+*/
   socket_fd = socket(host_info_list->ai_family,
                      host_info_list->ai_socktype,
                      host_info_list->ai_protocol);
   if (socket_fd == -1) {
     cerr << "Error: cannot create socket" << endl;
     cerr << "  (" << hostname << "," << port << ")" << endl;
-    //exit(EXIT_FAILURE);
     return -1;
   }
 
@@ -52,7 +54,6 @@ int build_server(const char * port) {
   if (status == -1) {
     cerr << "Error: cannot bind socket" << endl;
     cerr << "  (" << hostname << "," << port << ")" << endl;
-    //exit(EXIT_FAILURE);
     return -1;
   }
 
@@ -60,20 +61,19 @@ int build_server(const char * port) {
   if (status == -1) {
     cerr << "Error: cannot listen on socket" << endl;
     cerr << "  (" << hostname << "," << port << ")" << endl;
-    //exit(EXIT_FAILURE);
     return -1;
   }
 
-  //cout << "Waiting for connection on port " << port << endl;
-  // freeaddrinfo(host_info_list);
   return socket_fd;
 }
 
-int build_client(const char * hostname, const char * port) {
+int setup_client(const char * hostname, const char * port) {
+  int status;
+  int socket_fd;
   struct addrinfo host_info;
   struct addrinfo * host_info_list;
-  int socket_fd;
-  int status;
+  
+  
 
   memset(&host_info, 0, sizeof(host_info));
   host_info.ai_family = AF_UNSPEC;
@@ -83,7 +83,7 @@ int build_client(const char * hostname, const char * port) {
   if (status != 0) {
     cerr << "Error: cannot get address info for host" << endl;
     cerr << "  (" << hostname << "," << port << ")" << endl;
-    //exit(EXIT_FAILURE);
+
     return -1;
   }
 
@@ -93,25 +93,20 @@ int build_client(const char * hostname, const char * port) {
   if (socket_fd == -1) {
     cerr << "Error: cannot create socket" << endl;
     cerr << "  (" << hostname << "," << port << ")" << endl;
-    //exit(EXIT_FAILURE);
     return -1;
   }
-
-  //cout << "Connecting to " << hostname << " on port " << port << "..." << endl;
 
   status = connect(socket_fd, host_info_list->ai_addr, host_info_list->ai_addrlen);
   if (status == -1) {
     cerr << "Error: cannot connect to socket" << endl;
     cerr << "  (" << hostname << "," << port << ")" << endl;
-    //exit(EXIT_FAILURE);
     return -1;
   }
-  std::cout << "Connect to server successfully\n";
   freeaddrinfo(host_info_list);
   return socket_fd;
 }
 
-int server_accept(int socket_fd) {
+int accept_server(int socket_fd) {
   struct sockaddr_storage socket_addr;
   socklen_t socket_addr_len = sizeof(socket_addr);
   int client_connect_fd;
@@ -120,20 +115,7 @@ int server_accept(int socket_fd) {
       accept(socket_fd, (struct sockaddr *)&socket_addr, &socket_addr_len);
   if (client_connect_fd == -1) {
     cerr << "Error: cannot accept connection on socket" << endl;
-    perror("accept() failed");
-    //exit(EXIT_FAILURE);
     return -1;
   }
   return client_connect_fd;
-}
-
-int get_port_num(int socket_fd) {
-  struct sockaddr_in sin;
-  socklen_t len = sizeof(sin);
-  if (getsockname(socket_fd, (struct sockaddr *)&sin, &len) == -1) {
-    cerr << "Error: cannot getsockname" << endl;
-    //exit(EXIT_FAILURE);
-    return -1;
-  }
-  return ntohs(sin.sin_port);
 }

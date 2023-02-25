@@ -1,4 +1,4 @@
-#include "function.h"
+#include "connect_func.h"
 #include "pthread.h"
 class proxy {
  private:

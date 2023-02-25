@@ -1,0 +1,12 @@
+0: "CONNECT www.google.com:443 HTTP/1.1" from  @ Sat Feb 25 20:53:21 2023
+0: Requesting "CONNECT www.google.com:443 HTTP/1.1" from www.google.com
+0: Responding "HTTP/1.1 200 OK"
+1: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Sat Feb 25 20:53:21 2023
+1: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+1: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+4: "CONNECT adservice.google.com:443 HTTP/1.1" from  @ Sat Feb 25 20:53:23 2023
+4: Requesting "CONNECT adservice.google.com:443 HTTP/1.1" from adservice.google.com
+4: Responding "HTTP/1.1 200 OK"
+5: "CONNECT googleads.g.doubleclick.net:443 HTTP/1.1" from  @ Sat Feb 25 20:53:24 2023
+5: Requesting "CONNECT googleads.g.doubleclick.net:443 HTTP/1.1" from googleads.g.doubleclick.net
+5: Responding "HTTP/1.1 200 OK"

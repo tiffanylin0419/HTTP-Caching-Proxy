@@ -1,5 +1,6 @@
 #include "head.h"
 
+/*
 int get_number(std::string& s) {
   int ans=0;
   for (std::string::iterator it = s.begin(); it != s.end(); ++it) {
@@ -19,9 +20,9 @@ int getContextLength(const char * server_msg, int mes_len) {
   for(int i=0;i<parsedSpace.size();i++){
     if(parsedSpace[i]=="Content-Length:"){
       std::string hostLine=parsedSpace[i+1];
-      std::cout<<hostLine<<std::endl;
       return get_number(hostLine);
     }
   }
   return -1;
 }
+*/
