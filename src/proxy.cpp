@@ -3,7 +3,6 @@
 #include "connect_func.h"
 #include "request.h"
 #include "response.h"
-#include "error.h"
 
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 
