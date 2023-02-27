@@ -1,25 +1,22 @@
-0: "CONNECT contile-images.services.mozilla.com:443 HTTP/1.1" from  @ Sat Feb 25 22:49:37 2023
-0: Requesting "CONNECT contile-images.services.mozilla.com:443 HTTP/1.1" from contile-images.services.mozilla.com
+0: "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from  @ Mon Feb 27 08:07:11 2023
+0: not in cache
+0: Requesting "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from www.httpwatch.com
 0: Responding "HTTP/1.1 200 OK"
-1: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  @ Sat Feb 25 22:49:37 2023
-1: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
+0: not cacheable because no-store or private
+1: "CONNECT img-getpocket.cdn.mozilla.net:443 HTTP/1.1" from  @ Mon Feb 27 08:07:16 2023
+1: Requesting "CONNECT img-getpocket.cdn.mozilla.net:443 HTTP/1.1" from img-getpocket.cdn.mozilla.net
 1: Responding "HTTP/1.1 200 OK"
-2: "CONNECT img-getpocket.cdn.mozilla.net:443 HTTP/1.1" from  @ Sat Feb 25 22:49:37 2023
-2: Requesting "CONNECT img-getpocket.cdn.mozilla.net:443 HTTP/1.1" from img-getpocket.cdn.mozilla.net
+2: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  @ Mon Feb 27 08:07:17 2023
+2: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
 2: Responding "HTTP/1.1 200 OK"
-3: "POST http://ocsp.digicert.com/ HTTP/1.1" from  @ Sat Feb 25 22:49:38 2023
+3: "POST http://ocsp.digicert.com/ HTTP/1.1" from  @ Mon Feb 27 08:07:18 2023
 3: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
 3: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
-4: "POST http://r3.o.lencr.org/ HTTP/1.1" from  @ Sat Feb 25 22:49:38 2023
-4: Requesting "POST http://r3.o.lencr.org/ HTTP/1.1" from r3.o.lencr.org
-4: Requesting "POST http://r3.o.lencr.org/ HTTP/1.1" from r3.o.lencr.org
-5: "GET http://httpbin.org/forms/post HTTP/1.1" from  @ Sat Feb 25 22:49:44 2023
-5: not in cache
-5: Requesting "GET http://httpbin.org/forms/post HTTP/1.1" from httpbin.org
+4: "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from  @ Mon Feb 27 08:07:18 2023
+4: not in cache
+4: Requesting "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from www.httpwatch.com
+4: Responding "HTTP/1.1 200 OK"
+4: not cacheable because no-store or private
+5: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  @ Mon Feb 27 08:07:19 2023
+5: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
 5: Responding "HTTP/1.1 200 OK"
-6: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  @ Sat Feb 25 22:49:44 2023
-6: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
-6: Responding "HTTP/1.1 200 OK"
-7: "POST http://ocsp.digicert.com/ HTTP/1.1" from  @ Sat Feb 25 22:49:44 2023
-7: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
-7: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com

@@ -125,14 +125,18 @@ std::string request_directly(int client_fd, int server_fd,Request request, int c
       pthread_mutex_lock(&mutex1);		
       logFile << client_id << ": Responding \"" << line << "\"" << std::endl;		
       pthread_mutex_unlock(&mutex1);
+      std::string buffer2_ss(buffer2);
+      if(buffer2_ss.find("chunked") != std::string::npos && buffer2_ss.find("Transfer-Encoding:") != std::string::npos){isChunk=true;}
+      //assume no-store
+      pthread_mutex_lock(&mutex1);
+      logFile << client_id<< ": " << "not cacheable because no-store or private" << std::endl;		
+      pthread_mutex_unlock(&mutex1);
     }
 
     /*if(check502(client_fd,buffer2, bytes_received)==-1){
       return "";
     }*/
-    std::string buffer2_ss(buffer2);
-    if(buffer2_ss.find("chunked") != std::string::npos){isChunk=true;}
-
+    
     ssize_t send_client = send(client_fd, buffer2, bytes_received , MSG_NOSIGNAL); 		
     if (send_client<0){		
       std::cerr << "Error: send! client!" << std::endl;		
@@ -460,23 +464,20 @@ void * handle(void * info) {
         logFile << client_info->getID() << ": " << "not cacheable because no-store or private" << std::endl;		
         pthread_mutex_unlock(&mutex1);		
       }		
-      if (! response.expire_time.isEmpty() ) {		
-        pthread_mutex_lock(&mutex1);		
-        logFile << client_info->getID() << ": cached, expires at "<< response.expire_time.toPrintString() << std::endl;		
-        pthread_mutex_unlock(&mutex1);		
-      }		
-      if (response.needRevalidate && response.needCheckTime) {		
-        pthread_mutex_lock(&mutex1);		
-        logFile << client_info->getID() << ": " << "cached, but requires re-validation" << std::endl;		
-        pthread_mutex_unlock(&mutex1);		
-      }
-
-
-      if(response.canCache){
+      else{
+        if (! response.expire_time.isEmpty() ) {		
+          pthread_mutex_lock(&mutex1);		
+          logFile << client_info->getID() << ": cached, expires at "<< response.expire_time.toPrintString() << std::endl;		
+          pthread_mutex_unlock(&mutex1);		
+        }		
+        if (response.needRevalidate && response.needCheckTime) {		
+          pthread_mutex_lock(&mutex1);		
+          logFile << client_info->getID() << ": " << "cached, but requires re-validation" << std::endl;		
+          pthread_mutex_unlock(&mutex1);		
+        }
         std::cout<<response.input;
         if(response.statusCode=="200"){cache[request.line] = response;}
       }
-      
     }
     //地一行在cache裡
     else{
@@ -530,13 +531,13 @@ void * handle(void * info) {
           std::string server_response = request_directly(client_fd, server_fd,request,client_info->getID());		
           if(server_response==""){
             pthread_mutex_lock(&mutex1);		
-            logFile << client_info->getID() << ": ERROR request_directly!" << std::endl;;		
+            logFile << client_info->getID() << ": ERROR request_directly!" << std::endl;
             pthread_mutex_unlock(&mutex1);
             return NULL;
           }	
           else if(server_response=="chunk"){
             pthread_mutex_lock(&mutex1);		
-            logFile << client_info->getID() << ": NOTE chunked!" << std::endl;;		
+            logFile << client_info->getID() << ": NOTE chunked!" << std::endl;
             pthread_mutex_unlock(&mutex1);
             return NULL;
           }
