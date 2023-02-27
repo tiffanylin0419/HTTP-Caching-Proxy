@@ -125,13 +125,17 @@ std::string request_directly(int client_fd, int server_fd,Request request, int c
       pthread_mutex_lock(&mutex1);		
       logFile << client_id << ": Responding \"" << line << "\"" << std::endl;		
       pthread_mutex_unlock(&mutex1);
+      std::string buffer2_ss(buffer2);
+      if(buffer2_ss.find("chunked") != std::string::npos&& buffer2_ss.find("Transfer-Encoding:") != std::string::npos){isChunk=true;}
+      pthread_mutex_lock(&mutex1);
+      logFile << client_id<< ": " << "not cacheable because no-store or private" << std::endl;		
+      pthread_mutex_unlock(&mutex1);
     }
 
     /*if(check502(client_fd,buffer2, bytes_received)==-1){
       return "";
     }*/
-    std::string buffer2_ss(buffer2);
-    if(buffer2_ss.find("chunked") != std::string::npos){isChunk=true;}
+    
 
     ssize_t send_client = send(client_fd, buffer2, bytes_received , MSG_NOSIGNAL); 		
     if (send_client<0){		
