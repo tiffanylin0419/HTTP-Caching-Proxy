@@ -280,11 +280,62 @@ POST
 7: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
 7: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
 --------------------------------------------
+no-cache
+http://http://vcm-30822.vm.duke.edu:8000/
+--------------------------------------------
+0: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 00:20:22 2023
+0: not in cache
+0: Requesting "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from vcm-30822.vm.duke.edu
+0: Responding "HTTP/1.1 200 OK"
+0: ERROR recv! server!
+0: Received "Hello, world!OK" from vcm-30822.vm.duke.edu
+0: Responding "Hello, world!OK"
+0: cached, expires at Sun Feb 26 19:23:42 2023
 
-
-
-
-
+0: cached, but requires re-validation
+0: Tunnel closed
+1: "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from  @ Mon Feb 27 00:20:44 2023
+1: not in cache
+1: Requesting "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from detectportal.firefox.com
+1: Responding "HTTP/1.1 200 OK"
+3: "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from  @ Mon Feb 27 00:20:44 2023
+2: "GET http://detectportal.firefox.com/success.txt?ipv6 HTTP/1.1" from  @ Mon Feb 27 00:20:44 2023
+3: not in cache
+3: Requesting "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from detectportal.firefox.com
+2: not in cache
+2: Requesting "GET http://detectportal.firefox.com/success.txt?ipv6 HTTP/1.1" from detectportal.firefox.com
+3: Responding "HTTP/1.1 200 OK"
+2: Responding "HTTP/1.1 200 OK"
+4: "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from  @ Mon Feb 27 00:21:49 2023
+4: not in cache
+4: Requesting "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from detectportal.firefox.com
+4: Responding "HTTP/1.1 200 OK"
+6: "CONNECT spocs.getpocket.com:443 HTTP/1.1" from  @ Mon Feb 27 00:21:52 2023
+5: "CONNECT getpocket.cdn.mozilla.net:443 HTTP/1.1" from  @ Mon Feb 27 00:21:52 2023
+5: Requesting "CONNECT getpocket.cdn.mozilla.net:443 HTTP/1.1" from getpocket.cdn.mozilla.net
+5: Responding "HTTP/1.1 200 OK"
+6: Requesting "CONNECT spocs.getpocket.com:443 HTTP/1.1" from spocs.getpocket.com
+6: Responding "HTTP/1.1 200 OK"
+8: "POST http://ocsp.sca1b.amazontrust.com/ HTTP/1.1" from  @ Mon Feb 27 00:21:52 2023
+7: "POST http://r3.o.lencr.org/ HTTP/1.1" from  @ Mon Feb 27 00:21:52 2023
+7: Requesting "POST http://r3.o.lencr.org/ HTTP/1.1" from r3.o.lencr.org
+7: Requesting "POST http://r3.o.lencr.org/ HTTP/1.1" from r3.o.lencr.org
+8: Requesting "POST http://ocsp.sca1b.amazontrust.com/ HTTP/1.1" from ocsp.sca1b.amazontrust.com
+8: Requesting "POST http://ocsp.sca1b.amazontrust.com/ HTTP/1.1" from ocsp.sca1b.amazontrust.com
+9: "CONNECT img-getpocket.cdn.mozilla.net:443 HTTP/1.1" from  @ Mon Feb 27 00:21:54 2023
+9: Requesting "CONNECT img-getpocket.cdn.mozilla.net:443 HTTP/1.1" from img-getpocket.cdn.mozilla.net
+9: Responding "HTTP/1.1 200 OK"
+10: "POST http://r3.o.lencr.org/ HTTP/1.1" from  @ Mon Feb 27 00:21:54 2023
+10: Requesting "POST http://r3.o.lencr.org/ HTTP/1.1" from r3.o.lencr.org
+10: Requesting "POST http://r3.o.lencr.org/ HTTP/1.1" from r3.o.lencr.org
+11: "CONNECT img-getpocket.cdn.mozilla.net:443 HTTP/1.1" from  @ Mon Feb 27 00:21:56 2023
+11: Requesting "CONNECT img-getpocket.cdn.mozilla.net:443 HTTP/1.1" from img-getpocket.cdn.mozilla.net
+11: Responding "HTTP/1.1 200 OK"
+12: "POST http://r3.o.lencr.org/ HTTP/1.1" from  @ Mon Feb 27 00:21:57 2023
+12: Requesting "POST http://r3.o.lencr.org/ HTTP/1.1" from r3.o.lencr.org
+12: Requesting "POST http://r3.o.lencr.org/ HTTP/1.1" from r3.o.lencr.org
+11: ERROR recv server!
+11: Tunnel closed
 --------------------------------------------
 --------------------------------------------
 
