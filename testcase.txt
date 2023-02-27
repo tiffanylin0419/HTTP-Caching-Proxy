@@ -281,7 +281,7 @@ POST
 7: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
 --------------------------------------------
 no-cache
-http://vcm-30822.vm.duke.edu:8000/
+http://vcm-30822.vm.duke.edu:8000/ (I used Flask in Python to create our own website for this test case.)
 --------------------------------------------
 0: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 00:20:22 2023
 0: not in cache
@@ -338,7 +338,7 @@ http://vcm-30822.vm.duke.edu:8000/
 11: Tunnel closed
 --------------------------------------------
 no-store
-http://vcm-30822.vm.duke.edu:8000/
+http://vcm-30822.vm.duke.edu:8000/    (I used Flask in Python to create our own website for this test case.)
 --------------------------------------------
 0: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:09:14 2023
 0: not in cache
@@ -360,7 +360,7 @@ http://vcm-30822.vm.duke.edu:8000/
 2: Tunnel closed
 --------------------------------------------
 max-age=10
-http://vcm-30822.vm.duke.edu:8000/
+http://vcm-30822.vm.duke.edu:8000/    (I used Flask in Python to create our own website for this test case.)
 Action: Click the link four times, with an interval of less than 10 seconds between the first two clicks, an interval of more than 10 seconds between the second and third clicks, and then with an interval of less than 10 seconds between the last two clicks.
 --------------------------------------------
 0: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:44:31 2023
@@ -390,7 +390,7 @@ Action: Click the link four times, with an interval of less than 10 seconds betw
 3: Tunnel closed
 --------------------------------------------
 max-stale=10
-http://vcm-30822.vm.duke.edu:8000/
+http://vcm-30822.vm.duke.edu:8000/    (I used Flask in Python to create our own website for this test case.)
 Action: Click the link four times, with an interval of less than 10 seconds between the first two clicks, an interval of more than 10 seconds between the second and third clicks, and then with an interval of less than 10 seconds between the last two clicks.
 --------------------------------------------
 0: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:23:25 2023
@@ -439,7 +439,7 @@ Action: Click the link four times, with an interval of less than 10 seconds betw
 3: Tunnel closed
 --------------------------------------------
 must-revalidate
-http://vcm-30822.vm.duke.edu:8000/
+http://vcm-30822.vm.duke.edu:8000/    (I used Flask in Python to create our own website for this test case.)
 Action: Click the link four times, with an interval of less than 10 seconds between the first two clicks, an interval of more than 10 seconds between the second and third clicks, and then with an interval of less than 10 seconds between the last two clicks.
 --------------------------------------------
 0: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:32:57 2023
@@ -480,7 +480,7 @@ Action: Click the link four times, with an interval of less than 10 seconds betw
 3: Tunnel closed
 --------------------------------------------
 max-age=10,must-revalidate
-http://vcm-30822.vm.duke.edu:8000/
+http://vcm-30822.vm.duke.edu:8000/    (I used Flask in Python to create our own website for this test case.)
 Action: Click the link four times, with an interval of less than 10 seconds between the first two clicks, an interval of more than 10 seconds between the second and third clicks, and then with an interval of less than 10 seconds between the last two clicks.
 --------------------------------------------
 0: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:36:04 2023
@@ -527,7 +527,45 @@ Action: Click the link four times, with an interval of less than 10 seconds betw
 
 3: cached, but requires re-validation
 3: Tunnel closed
-
+--------------------------------------------
+Cache-Control:no-cache, no-store
+www.httpwatch.com/httpgallery/caching/imageA/
+--------------------------------------------
+0: "GET http://www.httpwatch.com/httpgallery/caching/imageA/ HTTP/1.1" from  @ Mon Feb 27 23:32:15 2023
+0: not in cache
+0: Requesting "GET http://www.httpwatch.com/httpgallery/caching/imageA/ HTTP/1.1" from www.httpwatch.com
+0: Responding "HTTP/1.1 200 OK"
+0: not cacheable because no-store or private
+1: "GET http://www.httpwatch.com/httpgallery/caching/imageA/ HTTP/1.1" from  @ Mon Feb 27 23:32:27 2023
+1: not in cache
+1: Requesting "GET http://www.httpwatch.com/httpgallery/caching/imageA/ HTTP/1.1" from www.httpwatch.com
+1: Responding "HTTP/1.1 200 OK"
+1: not cacheable because no-store or private
+0: ERROR recv! server!
+--------------------------------------------
+Cache-Control:private
+www.httpwatch.com/httpgallery/caching/imageB/
+--------------------------------------------
+0: "GET http://www.httpwatch.com/httpgallery/caching/imageB/ HTTP/1.1" from  @ Mon Feb 27 23:37:26 2023
+0: not in cache
+0: Requesting "GET http://www.httpwatch.com/httpgallery/caching/imageB/ HTTP/1.1" from www.httpwatch.com
+0: Responding "HTTP/1.1 200 OK"
+0: not cacheable because no-store or private
+1: "GET http://www.httpwatch.com/httpgallery/caching/imageB/ HTTP/1.1" from  @ Mon Feb 27 23:37:41 2023
+1: not in cache
+1: Requesting "GET http://www.httpwatch.com/httpgallery/caching/imageB/ HTTP/1.1" from www.httpwatch.com
+1: Responding "HTTP/1.1 200 OK"
+1: not cacheable because no-store or private
+0: ERROR recv! server!
+0: Received "HTTP/1.1 200 OK" from www.httpwatch.com
+0: Responding "HTTP/1.1 200 OK"
+0: not cacheable because no-store or private
+0: Tunnel closed
+1: ERROR recv! server!
+1: Received "HTTP/1.1 200 OK" from www.httpwatch.com
+1: Responding "HTTP/1.1 200 OK"
+1: not cacheable because no-store or private
+1: Tunnel closed
 
 
 
