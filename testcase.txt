@@ -281,7 +281,7 @@ POST
 7: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
 --------------------------------------------
 no-cache
-http://http://vcm-30822.vm.duke.edu:8000/
+http://vcm-30822.vm.duke.edu:8000/
 --------------------------------------------
 0: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 00:20:22 2023
 0: not in cache
@@ -337,29 +337,261 @@ http://http://vcm-30822.vm.duke.edu:8000/
 11: ERROR recv server!
 11: Tunnel closed
 --------------------------------------------
+no-store
+http://vcm-30822.vm.duke.edu:8000/
 --------------------------------------------
+0: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:09:14 2023
+0: not in cache
+0: Requesting "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from vcm-30822.vm.duke.edu
+0: Responding "HTTP/1.1 200 OK"
+0: ERROR recv! server!
+0: Received "HTTP/1.1 200 OK" from vcm-30822.vm.duke.edu
+0: Responding "HTTP/1.1 200 OK"
+0: not cacheable because no-store or private
+0: cached, expires at Sun Feb 26 21:12:34 2023
 
-
-
-
-
-
+0: cached, but requires re-validation
+0: Tunnel closed
 --------------------------------------------
-
+max-age=10
+http://vcm-30822.vm.duke.edu:8000/
 --------------------------------------------
+0: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:19:23 2023
+0: not in cache
+0: Requesting "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from vcm-30822.vm.duke.edu
+0: Responding "HTTP/1.1 200 OK"
+0: ERROR recv! server!
+0: Received "Hello, world!OK" from vcm-30822.vm.duke.edu
+0: Responding "Hello, world!OK"
+0: cached, expires at Sun Feb 26 21:22:43 2023
 
+0: cached, but requires re-validation
+0: Tunnel closed
+2: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:19:56 2023
+2: not in cache
+2: Requesting "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from vcm-30822.vm.duke.edu
+2: Responding "HTTP/1.1 200 OK"
+2: ERROR recv! server!
+2: Received "Hello, world!OK" from vcm-30822.vm.duke.edu
+2: Responding "Hello, world!OK"
+2: cached, expires at Sun Feb 26 21:23:16 2023
 
-
-
-
-
-
-
+2: cached, but requires re-validation
+2: Tunnel closed
 --------------------------------------------
+max-age=10
+http://vcm-30822.vm.duke.edu:8000/
+Action: Click the link four times, with an interval of less than 10 seconds between the first two clicks, an interval of more than 10 seconds between the second and third clicks, and then with an interval of less than 10 seconds between the last two clicks.
 --------------------------------------------
+0: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:23:25 2023
+0: not in cache
+0: Requesting "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from vcm-30822.vm.duke.edu
+0: Responding "HTTP/1.1 200 OK"
+0: ERROR recv! server!
+0: Received "Hello, world!OK" from vcm-30822.vm.duke.edu
+0: Responding "Hello, world!OK"
+0: cached, expires at Sun Feb 26 21:26:45 2023
 
+0: cached, but requires re-validation
+0: Tunnel closed
+1: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:23:28 2023
+1: not in cache
+1: Requesting "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from vcm-30822.vm.duke.edu
+1: Responding "HTTP/1.1 200 OK"
+1: ERROR recv! server!
+1: Received "Hello, world!OK" from vcm-30822.vm.duke.edu
+1: Responding "Hello, world!OK"
+1: cached, expires at Sun Feb 26 21:26:48 2023
 
+1: cached, but requires re-validation
+1: Tunnel closed
+2: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:23:50 2023
+2: not in cache
+2: Requesting "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from vcm-30822.vm.duke.edu
+2: Responding "HTTP/1.1 200 OK"
+2: ERROR recv! server!
+2: Received "Hello, world!OK" from vcm-30822.vm.duke.edu
+2: Responding "Hello, world!OK"
+2: cached, expires at Sun Feb 26 21:27:10 2023
 
+2: cached, but requires re-validation
+2: Tunnel closed
+3: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:23:53 2023
+3: not in cache
+3: Requesting "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from vcm-30822.vm.duke.edu
+3: Responding "HTTP/1.1 200 OK"
+3: ERROR recv! server!
+3: Received "HTTP/1.1 200 OK" from vcm-30822.vm.duke.edu
+3: Responding "HTTP/1.1 200 OK"
+3: cached, expires at Sun Feb 26 21:27:13 2023
+
+3: cached, but requires re-validation
+3: Tunnel closed
+--------------------------------------------
+max-age=10
+http://vcm-30822.vm.duke.edu:8000/
+--------------------------------------------
+0: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:19:23 2023
+0: not in cache
+0: Requesting "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from vcm-30822.vm.duke.edu
+0: Responding "HTTP/1.1 200 OK"
+0: ERROR recv! server!
+0: Received "Hello, world!OK" from vcm-30822.vm.duke.edu
+0: Responding "Hello, world!OK"
+0: cached, expires at Sun Feb 26 21:22:43 2023
+
+0: cached, but requires re-validation
+0: Tunnel closed
+2: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:19:56 2023
+2: not in cache
+2: Requesting "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from vcm-30822.vm.duke.edu
+2: Responding "HTTP/1.1 200 OK"
+2: ERROR recv! server!
+2: Received "Hello, world!OK" from vcm-30822.vm.duke.edu
+2: Responding "Hello, world!OK"
+2: cached, expires at Sun Feb 26 21:23:16 2023
+
+2: cached, but requires re-validation
+2: Tunnel closed
+--------------------------------------------
+max-stale=10
+http://vcm-30822.vm.duke.edu:8000/
+Action: Click the link four times, with an interval of less than 10 seconds between the first two clicks, an interval of more than 10 seconds between the second and third clicks, and then with an interval of less than 10 seconds between the last two clicks.
+--------------------------------------------
+0: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:23:25 2023
+0: not in cache
+0: Requesting "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from vcm-30822.vm.duke.edu
+0: Responding "HTTP/1.1 200 OK"
+0: ERROR recv! server!
+0: Received "Hello, world!OK" from vcm-30822.vm.duke.edu
+0: Responding "Hello, world!OK"
+0: cached, expires at Sun Feb 26 21:26:45 2023
+
+0: cached, but requires re-validation
+0: Tunnel closed
+1: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:23:28 2023
+1: not in cache
+1: Requesting "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from vcm-30822.vm.duke.edu
+1: Responding "HTTP/1.1 200 OK"
+1: ERROR recv! server!
+1: Received "Hello, world!OK" from vcm-30822.vm.duke.edu
+1: Responding "Hello, world!OK"
+1: cached, expires at Sun Feb 26 21:26:48 2023
+
+1: cached, but requires re-validation
+1: Tunnel closed
+2: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:23:50 2023
+2: not in cache
+2: Requesting "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from vcm-30822.vm.duke.edu
+2: Responding "HTTP/1.1 200 OK"
+2: ERROR recv! server!
+2: Received "Hello, world!OK" from vcm-30822.vm.duke.edu
+2: Responding "Hello, world!OK"
+2: cached, expires at Sun Feb 26 21:27:10 2023
+
+2: cached, but requires re-validation
+2: Tunnel closed
+3: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:23:53 2023
+3: not in cache
+3: Requesting "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from vcm-30822.vm.duke.edu
+3: Responding "HTTP/1.1 200 OK"
+3: ERROR recv! server!
+3: Received "HTTP/1.1 200 OK" from vcm-30822.vm.duke.edu
+3: Responding "HTTP/1.1 200 OK"
+3: cached, expires at Sun Feb 26 21:27:13 2023
+
+3: cached, but requires re-validation
+3: Tunnel closed
+--------------------------------------------
+must-revalidate
+http://vcm-30822.vm.duke.edu:8000/
+Action: Click the link four times, with an interval of less than 10 seconds between the first two clicks, an interval of more than 10 seconds between the second and third clicks, and then with an interval of less than 10 seconds between the last two clicks.
+--------------------------------------------
+0: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:32:57 2023
+0: not in cache
+0: Requesting "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from vcm-30822.vm.duke.edu
+0: Responding "HTTP/1.1 200 OK"
+0: ERROR recv! server!
+0: Received "Hello, world!OK" from vcm-30822.vm.duke.edu
+0: Responding "Hello, world!OK"
+0: cached, expires at Sun Feb 26 21:36:17 2023
+
+0: cached, but requires re-validation
+0: Tunnel closed
+1: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:32:59 2023
+1: not in cache
+1: Requesting "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from vcm-30822.vm.duke.edu
+1: Responding "HTTP/1.1 200 OK"
+1: ERROR recv! server!
+1: Received "HTTP/1.1 200 OK" from vcm-30822.vm.duke.edu
+1: Responding "HTTP/1.1 200 OK"
+1: cached, expires at Sun Feb 26 21:36:19 2023
+
+1: cached, but requires re-validation
+1: Tunnel closed
+2: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:33:28 2023
+2: in cache, but expired at Sun Feb 26 21:36:19 2023
+
+2: NOTE Cache-Control: must-revalidate
+5: in cache, requires validation
+2: Responding "HTTP/1.1 200 OK"
+2: Tunnel closed
+3: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:33:31 2023
+3: in cache, but expired at Sun Feb 26 21:36:48 2023
+
+3: NOTE Cache-Control: must-revalidate
+6: in cache, requires validation
+3: Responding "HTTP/1.1 200 OK"
+3: Tunnel closed
+--------------------------------------------
+max-age=10,must-revalidate
+http://vcm-30822.vm.duke.edu:8000/
+Action: Click the link four times, with an interval of less than 10 seconds between the first two clicks, an interval of more than 10 seconds between the second and third clicks, and then with an interval of less than 10 seconds between the last two clicks.
+--------------------------------------------
+0: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:36:04 2023
+0: not in cache
+0: Requesting "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from vcm-30822.vm.duke.edu
+0: Responding "HTTP/1.1 200 OK"
+0: ERROR recv! server!
+0: Received "Hello, world!OK" from vcm-30822.vm.duke.edu
+0: Responding "Hello, world!OK"
+0: cached, expires at Sun Feb 26 21:39:24 2023
+
+0: cached, but requires re-validation
+0: Tunnel closed
+1: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:36:07 2023
+1: not in cache
+1: Requesting "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from vcm-30822.vm.duke.edu
+1: Responding "HTTP/1.1 200 OK"
+1: ERROR recv! server!
+1: Received "Hello, world!OK" from vcm-30822.vm.duke.edu
+1: Responding "Hello, world!OK"
+1: cached, expires at Sun Feb 26 21:39:27 2023
+
+1: cached, but requires re-validation
+1: Tunnel closed
+2: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:36:40 2023
+2: not in cache
+2: Requesting "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from vcm-30822.vm.duke.edu
+2: Responding "HTTP/1.1 200 OK"
+2: ERROR recv! server!
+2: Received "Hello, world!OK" from vcm-30822.vm.duke.edu
+2: Responding "Hello, world!OK"
+2: cached, expires at Sun Feb 26 21:40:00 2023
+
+2: cached, but requires re-validation
+2: Tunnel closed
+3: "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from  @ Mon Feb 27 02:36:42 2023
+3: not in cache
+3: Requesting "GET http://vcm-30822.vm.duke.edu:8000/ HTTP/1.1" from vcm-30822.vm.duke.edu
+3: Responding "HTTP/1.1 200 OK"
+3: ERROR recv! server!
+3: Received "Hello, world!OK" from vcm-30822.vm.duke.edu
+3: Responding "Hello, world!OK"
+3: cached, expires at Sun Feb 26 21:40:02 2023
+
+3: cached, but requires re-validation
+3: Tunnel closed
 
 
 
