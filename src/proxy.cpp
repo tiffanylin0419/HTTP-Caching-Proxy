@@ -460,19 +460,17 @@ void * handle(void * info) {
         logFile << clientdata->id  << ": " << "not cacheable because no-store or private" << std::endl;		
         pthread_mutex_unlock(&mutex1);		
       }		
-      if (! response.expire_time.isEmpty() ) {		
-        pthread_mutex_lock(&mutex1);		
-        logFile << clientdata->id  << ": cached, expires at "<< response.expire_time.toPrintString() << std::endl;		
-        pthread_mutex_unlock(&mutex1);		
-      }		
-      if (response.needRevalidate && response.needCheckTime) {		
-        pthread_mutex_lock(&mutex1);		
-        logFile << clientdata->id  << ": " << "cached, but requires re-validation" << std::endl;		
-        pthread_mutex_unlock(&mutex1);		
-      }
-
-
-      if(response.canCache){
+      else{
+        if (! response.expire_time.isEmpty() ) {		
+          pthread_mutex_lock(&mutex1);		
+          logFile << clientdata->id  << ": cached, expires at "<< response.expire_time.toPrintString() << std::endl;		
+          pthread_mutex_unlock(&mutex1);		
+        }		
+        if (response.needRevalidate && response.needCheckTime) {		
+          pthread_mutex_lock(&mutex1);		
+          logFile << clientdata->id  << ": " << "cached, but requires re-validation" << std::endl;		
+          pthread_mutex_unlock(&mutex1);		
+        }
         std::cout<<response.input;
         if(response.statusCode=="200"){cache[request.line] = response;}
       }
@@ -530,13 +528,13 @@ void * handle(void * info) {
           std::string server_response = request_directly(client_fd, server_fd,request,clientdata->id);		
           if(server_response==""){
             pthread_mutex_lock(&mutex1);		
-            logFile << clientdata->id << ": ERROR request_directly!" << std::endl;;		
+            logFile << clientdata->id << ": ERROR request_directly!" << std::endl;
             pthread_mutex_unlock(&mutex1);
             return NULL;
           }	
           else if(server_response=="chunk"){
             pthread_mutex_lock(&mutex1);		
-            logFile << clientdata->id << ": NOTE chunked!" << std::endl;;		
+            logFile << clientdata->id << ": NOTE chunked!" << std::endl;
             pthread_mutex_unlock(&mutex1);
             return NULL;
           }
@@ -559,7 +557,7 @@ void * handle(void * info) {
         pthread_mutex_unlock(&mutex1);
         if(send_client_cache_directly(client_fd,request,clientdata->id)==-1){
           pthread_mutex_lock(&mutex1);		
-          logFile << clientdata->id << ": ERROR send_client_cache_directly!" << std::endl;;		
+          logFile << clientdata->id << ": ERROR send_client_cache_directly!" << std::endl;
           pthread_mutex_unlock(&mutex1);
           return NULL;
         }
