@@ -32,31 +32,18 @@ Request parse line with “\r”, response parse line with “\n”
 
 use MSG_NOSIGNAL for all send function so that the program will keep running when error
 
-Exception: strong exception guarantee, because if exception, no side effects will be visible becuase we used MSG_NOSIGNAL on send
 
-int send_client_cache_directly(int client_fd, Request request, int client_id);
-{
-This function provides basic guarantee, as it produces some error messages when errors occur, but it does not affect the integrity of cached data, nor cause any resource leaks or deadlocks. However, if an exception is thrown during the execution of this function, it cannot guarantee the integrity of cached data or the correctness of subsequent processing procedures.}
 
-std::string request_directly(int client_fd, int server_fd,Request request, int client_id);
-{
-This function provides basic guarantee, as it produces some error messages when errors occur, but it does not affect the integrity of cached data, nor cause any resource leaks or deadlocks. However, if an exception is thrown during the execution of this function, it cannot guarantee the integrity of cached data or the correctness of subsequent processing procedures.
-}
 
-std::string request_directly_post(int client_fd, int server_fd,Request request, int client_id);
-{
-he given function request_directly_post() provides the Basic Exception Guarantee, which means that if an exception is thrown, the function will not leave the program in an invalid state, and resources allocated in the function will be properly cleaned up.
+[Exception Guarantee] basic
 
-In this function, if an error occurs during the send() or recv() operations, the function returns an empty string and logs an error message using a mutex-protected shared logFile resource. The function also logs information about the request and response using the same logFile resource.
+request.h & response.h: basic exception guarentee
 
-However, there is no explicit rollback or undo operation for any state changes made within the function, so it does not provide the Strong Exception Guarantee. This means that if an exception is thrown, any state changes made prior to the exception may still persist.
-}
+connect_func.cpp & connect_func.h
+basic guarantee
 
-int revalidate(int server_fd,int client_fd, Request request, Response response, int client_id);
-{
-Based on the code, it's not clear what type of exception guarantee is provided.
+proxy.cpp-function that uses the upper functions
+basic guarantee
 
-The function does not have any explicit exception handling mechanism (e.g. try-catch blocks), so any exceptions thrown by the standard library functions used in the function (e.g. send() and recv()) will propagate to the caller without being caught or handled by this function.
-
-Therefore, the function does not provide any strong exception guarantee (i.e. guarantee that no changes have been made in case of an exception) or basic exception guarantee (i.e. guarantee that the program will be in a valid state if an exception occurs), unless the caller has implemented exception handling mechanisms at the higher-level that this function is being called from.
-}
+proxy.cpp-others
+most of them has no-throw guarentee
