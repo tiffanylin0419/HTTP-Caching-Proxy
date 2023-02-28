@@ -2,71 +2,133 @@
 Connect & Post
 https://www.youtube.com/
 --------------------------------------------
-0: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  @ Sat Feb 25 22:11:01 2023
-1: "CONNECT www.youtube.com:443 HTTP/1.1" from  @ Sat Feb 25 22:11:01 2023
-1: Requesting "CONNECT www.youtube.com:443 HTTP/1.1" from www.youtube.com
+0: "CONNECT contile-images.services.mozilla.com:443 HTTP/1.1" from  @ Mon Feb 27 23:54:13 2023
+1: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  @ Mon Feb 27 23:54:13 2023
+2: "CONNECT img-getpocket.cdn.mozilla.net:443 HTTP/1.1" from  @ Mon Feb 27 23:54:13 2023
+1: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
 1: Responding "HTTP/1.1 200 OK"
-0: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
+0: Requesting "CONNECT contile-images.services.mozilla.com:443 HTTP/1.1" from contile-images.services.mozilla.com
 0: Responding "HTTP/1.1 200 OK"
-2: "POST http://ocsp.digicert.com/ HTTP/1.1" from  @ Sat Feb 25 22:11:01 2023
-2: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
-2: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
-3: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  @ Sat Feb 25 22:11:01 2023
-3: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
-3: Responding "HTTP/1.1 200 OK"
-4: "CONNECT i.ytimg.com:443 HTTP/1.1" from  @ Sat Feb 25 22:11:01 2023
-5: "CONNECT safebrowsing.googleapis.com:443 HTTP/1.1" from  @ Sat Feb 25 22:11:01 2023
-5: Requesting "CONNECT safebrowsing.googleapis.com:443 HTTP/1.1" from safebrowsing.googleapis.com
+2: Requesting "CONNECT img-getpocket.cdn.mozilla.net:443 HTTP/1.1" from img-getpocket.cdn.mozilla.net
+2: Responding "HTTP/1.1 200 OK"
+3: "POST http://ocsp.digicert.com/ HTTP/1.1" from  @ Mon Feb 27 23:54:13 2023
+3: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+3: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+4: "POST http://r3.o.lencr.org/ HTTP/1.1" from  @ Mon Feb 27 23:54:13 2023
+4: Requesting "POST http://r3.o.lencr.org/ HTTP/1.1" from r3.o.lencr.org
+4: Requesting "POST http://r3.o.lencr.org/ HTTP/1.1" from r3.o.lencr.org
+2: ERROR recv server!
+2: Tunnel closed
+5: "CONNECT www.youtube.com:443 HTTP/1.1" from  @ Mon Feb 27 23:54:15 2023
+6: "CONNECT img-getpocket.cdn.mozilla.net:443 HTTP/1.1" from  @ Mon Feb 27 23:54:15 2023
+6: Requesting "CONNECT img-getpocket.cdn.mozilla.net:443 HTTP/1.1" from img-getpocket.cdn.mozilla.net
+6: Responding "HTTP/1.1 200 OK"
+5: Requesting "CONNECT www.youtube.com:443 HTTP/1.1" from www.youtube.com
 5: Responding "HTTP/1.1 200 OK"
-4: Requesting "CONNECT i.ytimg.com:443 HTTP/1.1" from i.ytimg.com
-4: Responding "HTTP/1.1 200 OK"
-8: "CONNECT accounts.google.com:443 HTTP/1.1" from  @ Sat Feb 25 22:11:01 2023
-8: Requesting "CONNECT accounts.google.com:443 HTTP/1.1" from accounts.google.com
-8: Responding "HTTP/1.1 200 OK"
-9: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Sat Feb 25 22:11:01 2023
-10: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Sat Feb 25 22:11:01 2023
-9: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
-9: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
-10: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
-10: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
-13: "CONNECT googleads.g.doubleclick.net:443 HTTP/1.1" from  @ Sat Feb 25 22:11:02 2023
-13: Requesting "CONNECT googleads.g.doubleclick.net:443 HTTP/1.1" from googleads.g.doubleclick.net
-13: Responding "HTTP/1.1 200 OK"
-14: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Sat Feb 25 22:11:02 2023
-14: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
-14: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
-11: "CONNECT www.google.com:443 HTTP/1.1" from  @ Sat Feb 25 22:11:01 2023
-11: Requesting "CONNECT www.google.com:443 HTTP/1.1" from www.google.com
+8: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Mon Feb 27 23:54:15 2023
+8: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+8: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+7: "POST http://r3.o.lencr.org/ HTTP/1.1" from  @ Mon Feb 27 23:54:15 2023
+7: Requesting "POST http://r3.o.lencr.org/ HTTP/1.1" from r3.o.lencr.org
+7: Requesting "POST http://r3.o.lencr.org/ HTTP/1.1" from r3.o.lencr.org
+9: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  @ Mon Feb 27 23:54:17 2023
+9: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
+9: Responding "HTTP/1.1 200 OK"
+12: "CONNECT i.ytimg.com:443 HTTP/1.1" from  @ Mon Feb 27 23:54:17 2023
+10: "CONNECT safebrowsing.googleapis.com:443 HTTP/1.1" from  @ Mon Feb 27 23:54:17 2023
+11: "CONNECT fonts.googleapis.com:443 HTTP/1.1" from  @ Mon Feb 27 23:54:17 2023
+10: Requesting "CONNECT safebrowsing.googleapis.com:443 HTTP/1.1" from safebrowsing.googleapis.com
+10: Responding "HTTP/1.1 200 OK"
+11: Requesting "CONNECT fonts.googleapis.com:443 HTTP/1.1" from fonts.googleapis.com
 11: Responding "HTTP/1.1 200 OK"
-15: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Sat Feb 25 22:11:03 2023
-15: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
-15: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
-5: ERROR recv server!
-5: Tunnel closed
-17: "CONNECT www.gstatic.com:443 HTTP/1.1" from  @ Sat Feb 25 22:11:03 2023
-16: "CONNECT yt3.ggpht.com:443 HTTP/1.1" from  @ Sat Feb 25 22:11:03 2023
-17: Requesting "CONNECT www.gstatic.com:443 HTTP/1.1" from www.gstatic.com
+12: Requesting "CONNECT i.ytimg.com:443 HTTP/1.1" from i.ytimg.com
+12: Responding "HTTP/1.1 200 OK"
+10: ERROR recv server!
+10: Tunnel closed
+13: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Mon Feb 27 23:54:18 2023
+13: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+13: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+14: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Mon Feb 27 23:54:18 2023
+14: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+14: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+15: "CONNECT accounts.google.com:443 HTTP/1.1" from  @ Mon Feb 27 23:54:20 2023
+15: Requesting "CONNECT accounts.google.com:443 HTTP/1.1" from accounts.google.com
+15: Responding "HTTP/1.1 200 OK"
+16: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Mon Feb 27 23:54:20 2023
+16: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+16: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+17: "CONNECT googleads.g.doubleclick.net:443 HTTP/1.1" from  @ Mon Feb 27 23:54:21 2023
+17: Requesting "CONNECT googleads.g.doubleclick.net:443 HTTP/1.1" from googleads.g.doubleclick.net
 17: Responding "HTTP/1.1 200 OK"
-16: Requesting "CONNECT yt3.ggpht.com:443 HTTP/1.1" from yt3.ggpht.com
-16: Responding "HTTP/1.1 200 OK"
-18: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Sat Feb 25 22:11:03 2023
+18: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Mon Feb 27 23:54:21 2023
 18: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
 18: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
-19: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Sat Feb 25 22:11:03 2023
-19: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
-19: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
-20: "CONNECT jnn-pa.googleapis.com:443 HTTP/1.1" from  @ Sat Feb 25 22:11:04 2023
-20: Requesting "CONNECT jnn-pa.googleapis.com:443 HTTP/1.1" from jnn-pa.googleapis.com
-20: Responding "HTTP/1.1 200 OK"
-21: "CONNECT static.doubleclick.net:443 HTTP/1.1" from  @ Sat Feb 25 22:11:04 2023
-21: Requesting "CONNECT static.doubleclick.net:443 HTTP/1.1" from static.doubleclick.net
+21: "CONNECT www.gstatic.com:443 HTTP/1.1" from  @ Mon Feb 27 23:54:21 2023
+21: Requesting "CONNECT www.gstatic.com:443 HTTP/1.1" from www.gstatic.com
 21: Responding "HTTP/1.1 200 OK"
-22: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Sat Feb 25 22:11:04 2023
-22: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
-22: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
-23: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Sat Feb 25 22:11:04 2023
+22: "CONNECT www.google.com:443 HTTP/1.1" from  @ Mon Feb 27 23:54:21 2023
+22: Requesting "CONNECT www.google.com:443 HTTP/1.1" from www.google.com
+22: Responding "HTTP/1.1 200 OK"
+23: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Mon Feb 27 23:54:21 2023
 23: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
 23: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+24: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Mon Feb 27 23:54:21 2023
+24: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+24: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+28: "CONNECT yt3.ggpht.com:443 HTTP/1.1" from  @ Mon Feb 27 23:54:21 2023
+28: Requesting "CONNECT yt3.ggpht.com:443 HTTP/1.1" from yt3.ggpht.com
+28: Responding "HTTP/1.1 200 OK"
+29: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Mon Feb 27 23:54:22 2023
+26: "CONNECT yt3.ggpht.com:443 HTTP/1.1" from  @ Mon Feb 27 23:54:21 2023
+27: "CONNECT yt3.ggpht.com:443 HTTP/1.1" from  @ Mon Feb 27 23:54:21 2023
+25: "CONNECT yt3.ggpht.com:443 HTTP/1.1" from  @ Mon Feb 27 23:54:21 2023
+29: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+29: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+25: Requesting "CONNECT yt3.ggpht.com:443 HTTP/1.1" from yt3.ggpht.com
+25: Responding "HTTP/1.1 200 OK"
+27: Requesting "CONNECT yt3.ggpht.com:443 HTTP/1.1" from yt3.ggpht.com
+27: Responding "HTTP/1.1 200 OK"
+26: Requesting "CONNECT yt3.ggpht.com:443 HTTP/1.1" from yt3.ggpht.com
+26: Responding "HTTP/1.1 200 OK"
+30: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Mon Feb 27 23:54:22 2023
+30: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+30: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+31: "CONNECT www.gstatic.com:443 HTTP/1.1" from  @ Mon Feb 27 23:54:22 2023
+31: Requesting "CONNECT www.gstatic.com:443 HTTP/1.1" from www.gstatic.com
+31: Responding "HTTP/1.1 200 OK"
+32: "CONNECT yt3.ggpht.com:443 HTTP/1.1" from  @ Mon Feb 27 23:54:23 2023
+32: Requesting "CONNECT yt3.ggpht.com:443 HTTP/1.1" from yt3.ggpht.com
+32: Responding "HTTP/1.1 200 OK"
+33: "CONNECT yt3.ggpht.com:443 HTTP/1.1" from  @ Mon Feb 27 23:54:23 2023
+33: Requesting "CONNECT yt3.ggpht.com:443 HTTP/1.1" from yt3.ggpht.com
+33: Responding "HTTP/1.1 200 OK"
+35: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Mon Feb 27 23:54:23 2023
+35: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+35: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+36: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Mon Feb 27 23:54:23 2023
+37: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Mon Feb 27 23:54:23 2023
+36: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+36: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+37: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+37: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+33: ERROR recv server!
+33: Tunnel closed
+40: "CONNECT jnn-pa.googleapis.com:443 HTTP/1.1" from  @ Mon Feb 27 23:54:24 2023
+39: "CONNECT static.doubleclick.net:443 HTTP/1.1" from  @ Mon Feb 27 23:54:24 2023
+39: Requesting "CONNECT static.doubleclick.net:443 HTTP/1.1" from static.doubleclick.net
+39: Responding "HTTP/1.1 200 OK"
+40: Requesting "CONNECT jnn-pa.googleapis.com:443 HTTP/1.1" from jnn-pa.googleapis.com
+40: Responding "HTTP/1.1 200 OK"
+41: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from  @ Mon Feb 27 23:54:24 2023
+41: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+41: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+27: ERROR recv server!
+27: Tunnel closed
+31: ERROR recv server!
+31: Tunnel closed
+26: ERROR recv server!
+26: Tunnel closed
+
 
 
 --------------------------------------------
@@ -227,33 +289,50 @@ https://www.google.com/search?q=hi&source=hp&ei=_of6Y6WdOKWjqtsPta-a-As&iflsig=A
 Chunk data
 http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx
 --------------------------------------------
-0: "CONNECT contile-images.services.mozilla.com:443 HTTP/1.1" from  @ Sat Feb 25 22:20:08 2023
-0: Requesting "CONNECT contile-images.services.mozilla.com:443 HTTP/1.1" from contile-images.services.mozilla.com
+0: "CONNECT img-getpocket.cdn.mozilla.net:443 HTTP/1.1" from  @ Mon Feb 27 23:56:00 2023
+0: Requesting "CONNECT img-getpocket.cdn.mozilla.net:443 HTTP/1.1" from img-getpocket.cdn.mozilla.net
 0: Responding "HTTP/1.1 200 OK"
-1: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  @ Sat Feb 25 22:20:08 2023
-1: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
+1: "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from  @ Mon Feb 27 23:56:02 2023
+1: not in cache
+1: Requesting "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from www.httpwatch.com
 1: Responding "HTTP/1.1 200 OK"
-2: "CONNECT img-getpocket.cdn.mozilla.net:443 HTTP/1.1" from  @ Sat Feb 25 22:20:08 2023
-2: Requesting "CONNECT img-getpocket.cdn.mozilla.net:443 HTTP/1.1" from img-getpocket.cdn.mozilla.net
+1: not cacheable because no-store or private
+2: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  @ Mon Feb 27 23:56:02 2023
+2: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
 2: Responding "HTTP/1.1 200 OK"
-3: "POST http://ocsp.digicert.com/ HTTP/1.1" from  @ Sat Feb 25 22:20:08 2023
-3: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
-3: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
-4: "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from  @ Sat Feb 25 22:20:17 2023
-4: not in cache
-4: Requesting "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from www.httpwatch.com
+3: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  @ Mon Feb 27 23:56:02 2023
+3: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
+3: Responding "HTTP/1.1 200 OK"
+4: "CONNECT aus5.mozilla.org:443 HTTP/1.1" from  @ Mon Feb 27 23:56:14 2023
+4: Requesting "CONNECT aus5.mozilla.org:443 HTTP/1.1" from aus5.mozilla.org
 4: Responding "HTTP/1.1 200 OK"
-5: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  @ Sat Feb 25 22:20:18 2023
-5: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
-5: Responding "HTTP/1.1 200 OK"
-6: "POST http://ocsp.digicert.com/ HTTP/1.1" from  @ Sat Feb 25 22:20:18 2023
-6: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
-6: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+
+
+--------------------------------------------
+No-store or private
+http://detectportal.firefox.com/success.txt?ipv4
+--------------------------------------------
+0: "CONNECT img-getpocket.cdn.mozilla.net:443 HTTP/1.1" from  @ Mon Feb 27 23:58:43 2023
+0: Requesting "CONNECT img-getpocket.cdn.mozilla.net:443 HTTP/1.1" from img-getpocket.cdn.mozilla.net
+0: Responding "HTTP/1.1 200 OK"
+1: "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from  @ Mon Feb 27 23:58:45 2023
+1: not in cache
+1: Requesting "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from detectportal.firefox.com
+1: Responding "HTTP/1.1 200 OK"
+1: not cacheable because no-store or private
+2: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  @ Mon Feb 27 23:58:45 2023
+3: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  @ Mon Feb 27 23:58:45 2023
+3: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
+3: Responding "HTTP/1.1 200 OK"
+2: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
+2: Responding "HTTP/1.1 200 OK"
+
 
 
 
 --------------------------------------------
 POST
+
 0: "CONNECT contile-images.services.mozilla.com:443 HTTP/1.1" from  @ Sat Feb 25 22:49:37 2023
 0: Requesting "CONNECT contile-images.services.mozilla.com:443 HTTP/1.1" from contile-images.services.mozilla.com
 0: Responding "HTTP/1.1 200 OK"
@@ -279,6 +358,11 @@ POST
 7: "POST http://ocsp.digicert.com/ HTTP/1.1" from  @ Sat Feb 25 22:49:44 2023
 7: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
 7: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+
+
+
+
+
 --------------------------------------------
 no-cache
 http://vcm-30822.vm.duke.edu:8000/ (I used Flask in Python to create our own website for this test case.)
@@ -336,6 +420,10 @@ http://vcm-30822.vm.duke.edu:8000/ (I used Flask in Python to create our own web
 12: Requesting "POST http://r3.o.lencr.org/ HTTP/1.1" from r3.o.lencr.org
 11: ERROR recv server!
 11: Tunnel closed
+
+
+
+
 --------------------------------------------
 no-store
 http://vcm-30822.vm.duke.edu:8000/    (I used Flask in Python to create our own website for this test case.)
@@ -358,6 +446,9 @@ http://vcm-30822.vm.duke.edu:8000/    (I used Flask in Python to create our own 
 
 2: cached, but requires re-validation
 2: Tunnel closed
+
+
+
 --------------------------------------------
 max-age=10
 http://vcm-30822.vm.duke.edu:8000/    (I used Flask in Python to create our own website for this test case.)
@@ -388,6 +479,10 @@ Action: Click the link four times, with an interval of less than 10 seconds betw
 7: in cache, requires validation
 3: Responding "HTTP/1.1 200 OK"
 3: Tunnel closed
+
+
+
+
 --------------------------------------------
 max-stale=10
 http://vcm-30822.vm.duke.edu:8000/    (I used Flask in Python to create our own website for this test case.)
@@ -437,6 +532,10 @@ Action: Click the link four times, with an interval of less than 10 seconds betw
 
 3: cached, but requires re-validation
 3: Tunnel closed
+
+
+
+
 --------------------------------------------
 must-revalidate
 http://vcm-30822.vm.duke.edu:8000/    (I used Flask in Python to create our own website for this test case.)
@@ -478,6 +577,10 @@ Action: Click the link four times, with an interval of less than 10 seconds betw
 6: in cache, requires validation
 3: Responding "HTTP/1.1 200 OK"
 3: Tunnel closed
+
+
+
+
 --------------------------------------------
 max-age=10,must-revalidate
 http://vcm-30822.vm.duke.edu:8000/    (I used Flask in Python to create our own website for this test case.)
@@ -527,6 +630,11 @@ Action: Click the link four times, with an interval of less than 10 seconds betw
 
 3: cached, but requires re-validation
 3: Tunnel closed
+
+
+
+
+
 --------------------------------------------
 Cache-Control:no-cache, no-store
 www.httpwatch.com/httpgallery/caching/imageA/
@@ -542,6 +650,10 @@ www.httpwatch.com/httpgallery/caching/imageA/
 1: Responding "HTTP/1.1 200 OK"
 1: not cacheable because no-store or private
 0: ERROR recv! server!
+
+
+
+
 --------------------------------------------
 Cache-Control:private
 www.httpwatch.com/httpgallery/caching/imageB/
@@ -568,7 +680,38 @@ www.httpwatch.com/httpgallery/caching/imageB/
 1: Tunnel closed
 
 
-
-
-
-
+--------------------------------------------
+cannot open web
+https://www.httpwatch.com/httpgallery/errors/images/imagec/
+--------------------------------------------
+0: "CONNECT www.httpwatch.com:443 HTTP/1.1" from  @ Mon Feb 27 23:32:43 2023
+0: Requesting "CONNECT www.httpwatch.com:443 HTTP/1.1" from www.httpwatch.com
+0: Responding "HTTP/1.1 200 OK"
+1: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  @ Mon Feb 27 23:32:44 2023
+4: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  @ Mon Feb 27 23:32:44 2023
+3: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  @ Mon Feb 27 23:32:44 2023
+2: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  @ Mon Feb 27 23:32:44 2023
+2: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
+1: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
+1: Responding "HTTP/1.1 200 OK"
+2: Responding "HTTP/1.1 200 OK"
+4: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
+4: Responding "HTTP/1.1 200 OK"
+3: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
+3: Responding "HTTP/1.1 200 OK"
+7: "POST http://ocsp.digicert.com/ HTTP/1.1" from  @ Mon Feb 27 23:32:44 2023
+7: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+7: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+8: "POST http://ocsp.digicert.com/ HTTP/1.1" from  @ Mon Feb 27 23:32:44 2023
+8: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+8: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+6: "POST http://ocsp.digicert.com/ HTTP/1.1" from  @ Mon Feb 27 23:32:44 2023
+5: "POST http://ocsp.digicert.com/ HTTP/1.1" from  @ Mon Feb 27 23:32:44 2023
+6: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+6: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+5: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+5: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+4: ERROR recv server!
+4: Tunnel closed
+1: ERROR recv server!
+1: Tunnel closed
